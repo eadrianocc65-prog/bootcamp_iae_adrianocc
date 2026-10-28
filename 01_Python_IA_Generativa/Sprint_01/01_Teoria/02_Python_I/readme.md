@@ -4,7 +4,7 @@
 
 ## Python I — Teoría
 
-En esta unidad se sientan las bases de Python: variables, tipos de datos, operaciones y las primeras colecciones del lenguaje.
+En este bloque se sientan las bases de Python: variables, tipos de datos, operaciones y las primeras colecciones del lenguaje.
 
 ---
 

@@ -14,7 +14,7 @@ Este sprint se divide en **bloques temáticos**, cada uno con su teoría y su wo
 
 ### 📖 Bloque 01 — Introducción a Herramientas
 
-📖 [`01_Teoria/01_Introduccion_Herramientas/`](./01_Teoria/01_Introduccion_Herramientas/) · 🎯 [`02_Workout/01_Introduccion_Herramientas/`](./02_Workout/01_Introduccion_Herramientas/) · 🧪 [`Practica_live_review/01_Introduccion_Herramientas/`](./Practica_live_review/01_Introduccion_Herramientas/)
+📖 [`01_Teoria/01_Introduccion_Herramientas/`](./01_Teoria/01_Introduccion_Herramientas/) · 🎯 [`02_Workout/01_Introduccion_Herramientas/`](./02_Workout/01_Introduccion_Herramientas/) · 📝 [`03_Material_de_Practica/01_Introduccion_Herramientas/`](./03_Material_de_Practica/01_Introduccion_Herramientas/) · 🧪 [`Practica_live_review/01_Introduccion_Herramientas/`](./Practica_live_review/01_Introduccion_Herramientas/)
 
 **Tema Central**: Markdown y documentación en el entorno del bootcamp
 
@@ -33,7 +33,7 @@ Este bloque te introduce a **Markdown**, el lenguaje de marcado que usarás para
 
 ### 🐍 Bloque 02 — Python I
 
-📖 [`01_Teoria/02_Python_I/`](./01_Teoria/02_Python_I/) · 🎯 [`02_Workout/02_Python_I/`](./02_Workout/02_Python_I/) · 🧪 [`Practica_live_review/02_Python_I/`](./Practica_live_review/02_Python_I/)
+📖 [`01_Teoria/02_Python_I/`](./01_Teoria/02_Python_I/) · 🎯 [`02_Workout/02_Python_I/`](./02_Workout/02_Python_I/) · 📝 [`03_Material_de_Practica/02_Python_I/`](./03_Material_de_Practica/02_Python_I/) · 🧪 [`Practica_live_review/02_Python_I/`](./Practica_live_review/02_Python_I/)
 
 **Tema Central**: Fundamentos de Python y programación básica
 
@@ -53,7 +53,7 @@ En este bloque comienzas a escribir código Python. Aprenderás los conceptos fu
 
 ### 🔁 Bloque 03 — Flujos de Control
 
-📖 [`01_Teoria/03_Flujos_de_Control/`](./01_Teoria/03_Flujos_de_Control/) · 🎯 [`02_Workout/03_Flujos_de_Control/`](./02_Workout/03_Flujos_de_Control/) · 🧪 [`Practica_live_review/03_Flujos_de_Control/`](./Practica_live_review/03_Flujos_de_Control/)
+📖 [`01_Teoria/03_Flujos_de_Control/`](./01_Teoria/03_Flujos_de_Control/) · 🎯 [`02_Workout/03_Flujos_de_Control/`](./02_Workout/03_Flujos_de_Control/) · 📝 [`03_Material_de_Practica/03_Flujos_de_Control/`](./03_Material_de_Practica/03_Flujos_de_Control/) · 🧪 [`Practica_live_review/03_Flujos_de_Control/`](./Practica_live_review/03_Flujos_de_Control/)
 
 **Tema Central**: Tomar decisiones y repetir acciones en Python
 
@@ -71,11 +71,12 @@ En este bloque comienzas a escribir código Python. Aprenderás los conceptos fu
 Sprint_01/
 ├── README.md              ← Este documento
 ├── 01_Teoria/             ← Material teórico, un subdirectorio por bloque
-├── 02_Workout/            ← Workouts (y sus ejercicios), un subdirectorio por bloque
+├── 02_Workout/            ← Workouts, un subdirectorio por bloque
+├── 03_Material_de_Practica/ ← Ejercicios y práctica extra que no son del workout, un subdirectorio por bloque
 └── Practica_live_review/  ← Material de la Live Review (si el sprint lo incluye)
 ```
 
-Dentro de cada carpeta encontrarás un subdirectorio por bloque temático. Los ejercicios con solución para repasar están junto al Workout correspondiente.
+Dentro de cada carpeta encontrarás un subdirectorio por bloque temático. Los ejercicios con solución para repasar están en `03_Material_de_Practica`, en el bloque correspondiente.
 
 ---
 
