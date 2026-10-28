@@ -4,7 +4,7 @@
 
 ## Flujos de Control — Teoría
 
-En esta unidad se introduce el control del flujo de ejecución en Python: condicionales, bucles y manejo de errores.
+En este bloque se introduce el control del flujo de ejecución en Python: condicionales, bucles y manejo de errores.
 
 ---
 
