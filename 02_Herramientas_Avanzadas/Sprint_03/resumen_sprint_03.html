@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+<title>Guía visual · Sprint 03 — Herramientas Avanzadas: NumPy y Pandas</title>
+<style>
+  :root{
+    --bg:#ffffff; --bg2:#f4f4f5; --card:#ffffff; --card2:#fafafa;
+    --border:#e6e4e5; --text:#141416; --muted:#54545a; --dim:#8a8a8f;
+    --accent:#e4002b; --accent2:#18181b; --amber:#6b7280; --rose:#e4002b;
+    --green:#18181b; --violet:#3f3f46; --code:#161618;
+    --shadow:0 10px 30px rgba(0,0,0,.08);
+    --radius:14px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:linear-gradient(180deg,#faf7fd,#ffffff 260px);
+    color:var(--text); font-family:'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.65; font-size:16px;
+  }
+  h1,h2,h3,h4,.sec-num,.hero .kicker,.pipe .st-nm{font-family:'Sora','Inter',sans-serif}
+  a{color:var(--accent); text-decoration:none}
+  a:hover{text-decoration:underline}
+
+  /* Layout */
+  .wrap{max-width:1180px; margin:0 auto; padding:0 22px}
+  header.hero{
+    padding:56px 22px 30px; text-align:center;
+    border-bottom:1px solid var(--border);
+    background:radial-gradient(1200px 420px at 50% -120px, rgba(228,0,43,.10), transparent);
+  }
+  .kicker{
+    display:inline-block; font-size:12.5px; letter-spacing:.16em; text-transform:uppercase;
+    color:var(--accent); background:rgba(228,0,43,.07); border:1px solid rgba(228,0,43,.25);
+    padding:5px 12px; border-radius:999px; margin-bottom:16px; font-weight:600;
+  }
+  h1{font-size:clamp(28px,4.4vw,44px); margin:.1em 0 .2em; line-height:1.12; letter-spacing:-.02em}
+  .hero p{color:var(--muted); max-width:760px; margin:10px auto 0; font-size:17px}
+  .hero .tag{color:var(--dim); font-size:13.5px; margin-top:18px}
+
+  /* Sticky nav */
+  nav.toc{
+    position:sticky; top:0; z-index:20; background:rgba(255,255,255,.88);
+    backdrop-filter:blur(10px); border-bottom:1px solid var(--border);
+  }
+  nav.toc .wrap{display:flex; gap:6px; overflow-x:auto; padding:10px 22px; scrollbar-width:thin}
+  nav.toc a{
+    white-space:nowrap; color:var(--muted); font-size:13.5px; font-weight:600;
+    padding:7px 13px; border-radius:9px; border:1px solid transparent;
+  }
+  nav.toc a:hover{color:var(--text); background:var(--card); text-decoration:none}
+  nav.toc a.active{color:var(--text); background:var(--card2); border-color:var(--border)}
+
+  section{padding:44px 0 8px}
+  section > .wrap > .sec-head{display:flex; align-items:center; gap:14px; margin-bottom:6px}
+  .sec-num{
+    flex:0 0 auto; width:38px; height:38px; border-radius:11px; display:grid; place-items:center;
+    font-weight:700; font-size:16px; color:#fff; background:linear-gradient(135deg,var(--accent),var(--accent2));
+  }
+  h2{font-size:clamp(22px,3vw,30px); margin:0; letter-spacing:-.01em}
+  .lead{color:var(--muted); font-size:16.5px; margin:6px 0 26px; max-width:840px}
+  h3{font-size:19px; margin:30px 0 10px; letter-spacing:-.01em}
+  h4{font-size:15.5px; margin:20px 0 8px; color:var(--text)}
+  p{margin:10px 0}
+
+  /* Cards & grids */
+  .grid{display:grid; gap:16px}
+  .g2{grid-template-columns:repeat(2,1fr)}
+  .g3{grid-template-columns:repeat(3,1fr)}
+  .g4{grid-template-columns:repeat(4,1fr)}
+  @media(max-width:960px){.g4{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:820px){.g2,.g3,.g4{grid-template-columns:1fr}}
+  .card{
+    background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
+    padding:20px 20px; box-shadow:var(--shadow); min-width:0;
+  }
+  .card h4{margin-top:0}
+  .card .ico{font-size:22px}
+  .pill{
+    display:inline-block; font-size:12px; font-weight:600; padding:3px 10px; border-radius:999px;
+    border:1px solid var(--border); color:var(--muted); background:var(--bg2);
+  }
+  .pill.a{color:var(--accent); border-color:rgba(228,0,43,.35); background:rgba(228,0,43,.08)}
+  .pill.t{color:var(--accent2); border-color:rgba(24,24,27,.3); background:rgba(24,24,27,.06)}
+  .pill.v{color:var(--violet); border-color:rgba(63,63,70,.3); background:rgba(63,63,70,.06)}
+  .pill.g{color:var(--green); border-color:rgba(24,24,27,.3); background:rgba(24,24,27,.06)}
+  .pill.am{color:var(--amber); border-color:rgba(107,114,128,.3); background:rgba(107,114,128,.08)}
+
+  /* Tables */
+  .tbl{overflow-x:auto; border:1px solid var(--border); border-radius:var(--radius); margin:16px 0}
+  table{border-collapse:collapse; width:100%; font-size:14.5px; min-width:520px}
+  th,td{padding:11px 14px; text-align:left; border-bottom:1px solid var(--border); vertical-align:top}
+  th{background:var(--bg2); color:var(--muted); font-weight:600; font-size:12.5px; text-transform:uppercase; letter-spacing:.04em}
+  tr:last-child td{border-bottom:none}
+  td strong{color:var(--text)}
+
+  /* Code / diagrams */
+  pre{
+    background:var(--code); border:1px solid var(--border); border-radius:12px;
+    padding:16px 18px; overflow-x:auto; font-size:13.5px; line-height:1.5;
+    font-family:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace; color:#d5dde6; margin:14px 0;
+  }
+  pre .c{color:#8a8a90}
+  pre .k{color:#ff5c6c}
+  pre .s{color:#e8e8ea}
+  pre .f{color:#ff8f9a}
+  pre .n{color:#ffffff}
+  code.inl{background:var(--bg2); border:1px solid var(--border); border-radius:6px; padding:1px 6px; font-size:13px; font-family:Consolas,monospace; color:var(--accent)}
+
+  .callout{
+    border-left:3px solid var(--accent); background:rgba(228,0,43,.05);
+    padding:14px 18px; border-radius:0 12px 12px 0; margin:18px 0;
+  }
+  .callout.warn{border-color:var(--amber); background:rgba(107,114,128,.07)}
+  .callout.key{border-color:var(--accent2); background:rgba(24,24,27,.05)}
+  .callout .lab{font-weight:700; font-size:12.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); display:block; margin-bottom:3px}
+
+  ul.clean{list-style:none; padding-left:0; margin:12px 0}
+  ul.clean li{padding:7px 0 7px 28px; position:relative; border-bottom:1px dashed var(--border)}
+  ul.clean li:last-child{border-bottom:none}
+  ul.clean li:before{content:"▹"; position:absolute; left:6px; color:var(--accent)}
+
+  /* Module / loop diagram */
+  .modmap{display:grid; grid-template-columns:1fr; gap:0; margin:20px 0}
+  .layer{
+    border:1px solid var(--border); border-radius:12px; padding:14px 16px; margin:8px 0; background:var(--card);
+    position:relative;
+  }
+  .layer .lname{font-weight:700; font-size:14px; color:var(--text)}
+  .layer .ldesc{color:var(--muted); font-size:13.5px; margin-top:2px}
+  .layer.entry{border-color:rgba(228,0,43,.4)}
+  .layer.cfg{border-color:rgba(107,114,128,.45)}
+  .layer.engine{border-color:rgba(24,24,27,.35)}
+  .layer.io{border-color:rgba(63,63,70,.4)}
+  .flowarrow{text-align:center; color:var(--dim); font-size:20px; margin:-2px 0}
+
+  .filecard{display:flex; gap:12px; align-items:flex-start; padding:12px 0; border-bottom:1px dashed var(--border)}
+  .filecard:last-child{border-bottom:none}
+  .filecard .fn{
+    flex:0 0 auto; font-family:Consolas,monospace; font-size:13px; color:#ff6b6b;
+    background:var(--code); border:1px solid var(--border); border-radius:7px; padding:4px 9px; min-width:118px; text-align:center;
+  }
+  .filecard .fd{color:var(--muted); font-size:14px; min-width:0}
+  .filecard .fd b{color:var(--text)}
+  @media(max-width:560px){.filecard{flex-direction:column; gap:6px}}
+
+  .step{display:flex; gap:14px; margin:14px 0}
+  .step .num{flex:0 0 auto; width:30px; height:30px; border-radius:50%; background:var(--card2); border:1px solid var(--border); display:grid; place-items:center; font-weight:700; font-size:14px; color:var(--accent)}
+  .step .body{flex:1}
+  .step .body b{color:var(--text)}
+
+  /* pipeline horizontal strip */
+  .pipe{display:flex; align-items:stretch; gap:0; flex-wrap:wrap; margin:18px 0}
+  .pipe .stage{flex:1 1 140px; min-width:130px; border:1px solid var(--border); border-radius:12px; background:var(--card); padding:12px 12px; text-align:center; position:relative}
+  .pipe .stage .st-ic{font-size:20px}
+  .pipe .stage .st-nm{font-weight:700; font-size:13.5px; margin-top:4px; color:var(--text)}
+  .pipe .stage .st-ds{font-size:11.5px; color:var(--dim); margin-top:2px; line-height:1.35}
+  .pipe .sep{flex:0 0 26px; display:grid; place-items:center; color:var(--dim); font-size:20px}
+  @media(max-width:820px){.pipe .sep{width:100%; flex-basis:100%; transform:rotate(90deg); height:22px}}
+
+  footer{margin-top:50px; padding:30px 22px 60px; border-top:1px solid var(--border); text-align:center; color:var(--dim); font-size:13.5px}
+
+  .antipattern{border-left:3px solid var(--rose); background:rgba(228,0,43,.05); padding:12px 16px; border-radius:0 10px 10px 0; margin:10px 0; font-size:14.5px}
+  .goodpattern{border-left:3px solid var(--green); background:rgba(24,24,27,.05); padding:12px 16px; border-radius:0 10px 10px 0; margin:10px 0; font-size:14.5px}
+  .two-col{display:grid; grid-template-columns:1fr 1fr; gap:16px}
+  .two-col > *{min-width:0}
+  @media(max-width:820px){.two-col{grid-template-columns:1fr}}
+  .mini{font-size:13px; color:var(--dim)}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <span class="kicker">Bootcamp IA Engineering · Guía del alumno · Módulo Herramientas Avanzadas</span>
+  <h1>Sprint 03 — Herramientas Avanzadas: NumPy y Pandas</h1>
+  <p>En el Sprint 02 aprendiste colecciones, funciones y OOP para datos pequeños. Ahora das el salto a <b>datos a escala</b>: <b>NumPy</b> para computación numérica vectorizada y <b>Pandas</b> para manipular tablas (CSV, Excel, JSON). Son las herramientas con las que un ingeniero de IA prepara datasets todos los días.</p>
+  <div class="tag">Guía visual del sprint · dos bloques · prácticas Live Review de NumPy y Pandas</div>
+</header>
+
+<nav class="toc" id="toc">
+  <div class="wrap">
+    <a href="#mapa">Mapa del sprint</a>
+    <a href="#numpy">1 · NumPy</a>
+    <a href="#pandas">2 · Pandas ★</a>
+    <a href="#proyecto">Live Review</a>
+    <a href="#checklist">Checklist</a>
+  </div>
+</nav>
+
+<section id="mapa">
+  <div class="wrap">
+    <div class="sec-head"><div class="sec-num">◎</div><h2>De listas sueltas a datos a escala</h2></div>
+    <p class="lead">Primer sprint del módulo de <b>Herramientas Avanzadas</b>. La pregunta central: <b>¿cómo trabajo con miles o millones de filas de datos sin perder rendimiento ni cordura?</b></p>
+
+    <div class="tbl">
+      <table>
+        <thead><tr><th>Sprint</th><th>Pregunta</th><th>Fase</th></tr></thead>
+        <tbody>
+          <tr><td><strong>02</strong></td><td>¿Cómo organizo datos y código?</td><td>Estructuras y OOP</td></tr>
+          <tr><td><strong>03 (este)</strong></td><td>¿Cómo manipulo datasets grandes?</td><td>NumPy + Pandas</td></tr>
+          <tr><td><strong>04 →</strong></td><td>¿Cómo me conecto al mundo exterior?</td><td>APIs + IA generativa</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Evolución desde el Sprint 02</h3>
+    <pre>S02  listas, dicts, funciones, clases
+ ↓
+S03  <span class="f">NumPy</span>: arrays vectorizados           (bloque 1)
+     + <span class="f">Pandas</span>: DataFrames, lectura, limpieza (bloque 2 ★)
+ ↓
+S04  requests → APIs HTTP + Gemini</pre>
+
+    <h3>Los dos bloques del sprint</h3>
+    <div class="grid g2">
+      <div class="card"><div class="ico">🔢</div><h4>1 · NumPy</h4><p class="mini">Arrays n-dimensionales, operaciones vectorizadas, estadística, broadcasting y filtrado con máscaras booleanas.</p></div>
+      <div class="card"><div class="ico">📊</div><h4>2 · Pandas ★</h4><p class="mini">Series y DataFrames, lectura/escritura (CSV, Excel, JSON), selección (<code class="inl">loc</code>/<code class="inl">iloc</code>), filtrado, groupby, merge y apply.</p></div>
+    </div>
+
+    <div class="callout key">
+      <span class="lab">Idea que atraviesa el sprint</span>
+      <b>Pensar en vectores y tablas, no en bucles.</b> Donde en Python puro escribirías un <code class="inl">for</code>, en NumPy/Pandas aplicas una operación sobre todo el array/DataFrame. Es más legible, más rápido y lo entenderán los compañeros.
+    </div>
+
+    <h3>Escalera pedagógica</h3>
+    <div class="pipe">
+      <div class="stage"><div class="st-ic">🔢</div><div class="st-nm">Arrays NumPy</div><div class="st-ds">1D y 2D</div></div>
+      <div class="sep">→</div>
+      <div class="stage"><div class="st-ic">⚡</div><div class="st-nm">Vectorización</div><div class="st-ds">adiós al for</div></div>
+      <div class="sep">→</div>
+      <div class="stage"><div class="st-ic">📑</div><div class="st-nm">Series + DF</div><div class="st-ds">Pandas básico</div></div>
+      <div class="sep">→</div>
+      <div class="stage"><div class="st-ic">🧹</div><div class="st-nm">Limpieza</div><div class="st-ds">NaN, duplicados</div></div>
+      <div class="sep">→</div>
+      <div class="stage"><div class="st-ic">🏁</div><div class="st-nm">Groupby + merge ★</div><div class="st-ds">análisis</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="numpy">
+  <div class="wrap">
+    <div class="sec-head"><div class="sec-num">1</div><h2>NumPy — computación numérica vectorizada</h2></div>
+    <p class="lead"><b>NumPy</b> es la base de todo el stack científico de Python. Introduce el <code class="inl">ndarray</code>: un array n-dimensional homogéneo (todos los elementos del mismo tipo) que permite operaciones <b>vectorizadas</b>, decenas de veces más rápidas que un bucle Python.</p>
+
+    <h3>Crear arrays</h3>
+    <pre><span class="k">import</span> numpy <span class="k">as</span> np
+
+a = np.<span class="f">array</span>([1, 2, 3, 4])           <span class="c"># desde lista</span>
+b = np.<span class="f">zeros</span>((3, 4))                  <span class="c"># matriz 3×4 de ceros</span>
+c = np.<span class="f">ones</span>(5)                        <span class="c"># 5 unos</span>
+d = np.<span class="f">arange</span>(0, 10, 2)               <span class="c"># [0,2,4,6,8]</span>
+e = np.<span class="f">linspace</span>(0, 1, 5)              <span class="c"># 5 valores entre 0 y 1</span>
+f = np.random.<span class="f">rand</span>(3, 3)             <span class="c"># 3×3 aleatorio en [0,1)</span>
+
+a.shape, a.dtype, a.ndim             <span class="c"># (4,), int64, 1</span></pre>
+
+    <h3>Operaciones vectorizadas</h3>
+    <div class="two-col">
+      <div class="antipattern"><b>❌ Loop en Python puro:</b>
+<pre style="margin:6px 0">resultado = []
+<span class="k">for</span> x <span class="k">in</span> datos:
+    resultado.append(x * 2 + 1)</pre>
+      </div>
+      <div class="goodpattern"><b>✅ Vectorizado con NumPy:</b>
+<pre style="margin:6px 0">resultado = datos * 2 + 1</pre>
+      </div>
+    </div>
+
+    <h3>Estadística básica</h3>
+    <pre>a.<span class="f">mean</span>(), a.<span class="f">std</span>(), a.<span class="f">min</span>(), a.<span class="f">max</span>(), a.<span class="f">sum</span>()
+np.<span class="f">median</span>(a), np.<span class="f">percentile</span>(a, 90)
+
+<span class="c"># Sobre un eje de una matriz 2D</span>
+m.<span class="f">mean</span>(axis=0)    <span class="c"># media por columnas</span>
+m.<span class="f">mean</span>(axis=1)    <span class="c"># media por filas</span></pre>
+
+    <h3>Filtrado con máscaras booleanas</h3>
+    <pre>edades = np.<span class="f">array</span>([18, 25, 34, 17, 45, 12])
+mayores = edades[edades &gt;= 18]       <span class="c"># [18 25 34 45]</span>
+edades[edades &lt; 18] = 0              <span class="c"># modifica in-place</span>
+
+<span class="c"># np.where: segmentación condicional</span>
+etiqueta = np.<span class="f">where</span>(edades &gt;= 18, <span class="s">"adulto"</span>, <span class="s">"menor"</span>)</pre>
+
+    <h3>Broadcasting</h3>
+    <p>NumPy "estira" automáticamente arrays de distinta forma para que las operaciones encajen, siempre que las dimensiones sean compatibles.</p>
+    <pre>m = np.<span class="f">arange</span>(12).<span class="f">reshape</span>(3, 4)   <span class="c"># 3×4</span>
+m + 10                               <span class="c"># suma a cada elemento</span>
+m + np.<span class="f">array</span>([1, 2, 3, 4])          <span class="c"># suma por columna (broadcasting)</span></pre>
+
+    <h3>Errores típicos</h3>
+    <ul class="clean">
+      <li>Mezclar tipos: un array no puede tener a la vez <code class="inl">int</code> y <code class="inl">str</code>; se promueve al más general.</li>
+      <li><code class="inl">a = b</code> y <code class="inl">a[:]</code> son <b>vistas</b>, no copias. Para copiar: <code class="inl">a.copy()</code>.</li>
+      <li>Confundir <code class="inl">axis=0</code> (columnas) con <code class="inl">axis=1</code> (filas): se mira la forma del resultado.</li>
+      <li>Hacer un <code class="inl">for</code> cuando existe una operación vectorizada: lento y menos claro.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="pandas">
+  <div class="wrap">
+    <div class="sec-head"><div class="sec-num">2</div><h2>Pandas — DataFrames para datos tabulares ★</h2></div>
+    <p class="lead"><b>Pandas</b> es la herramienta estándar para procesar datos tabulares. Trabaja con dos estructuras: <b>Series</b> (una columna con índice) y <b>DataFrame</b> (una tabla con filas, columnas y un índice). Internamente usa NumPy, así que hereda su velocidad.</p>
+
+    <h3>Lectura y escritura</h3>
+    <pre><span class="k">import</span> pandas <span class="k">as</span> pd
+
+df = pd.<span class="f">read_csv</span>(<span class="s">"ventas.csv"</span>)
+df = pd.<span class="f">read_excel</span>(<span class="s">"datos.xlsx"</span>, sheet_name=<span class="s">"2024"</span>)
+df = pd.<span class="f">read_json</span>(<span class="s">"api_response.json"</span>)
+
+df.<span class="f">to_csv</span>(<span class="s">"salida.csv"</span>, index=<span class="k">False</span>)
+df.<span class="f">to_excel</span>(<span class="s">"salida.xlsx"</span>, sheet_name=<span class="s">"out"</span>)</pre>
+
+    <h3>Primera inspección</h3>
+    <pre>df.<span class="f">head</span>(), df.<span class="f">tail</span>()           <span class="c"># primeras/últimas filas</span>
+df.shape, df.columns, df.dtypes
+df.<span class="f">info</span>(), df.<span class="f">describe</span>()         <span class="c"># info de columnas + estadística</span>
+df.<span class="f">isna</span>().<span class="f">sum</span>()                 <span class="c"># NaN por columna</span>
+df[<span class="s">"columna"</span>].<span class="f">value_counts</span>()      <span class="c"># conteo de valores únicos</span></pre>
+
+    <h3>Selección: <code class="inl">loc</code> vs <code class="inl">iloc</code></h3>
+    <div class="tbl">
+      <table>
+        <thead><tr><th>Operación</th><th>Qué devuelve</th></tr></thead>
+        <tbody>
+          <tr><td><code class="inl">df["col"]</code></td><td>Una Series (una columna)</td></tr>
+          <tr><td><code class="inl">df[["a","b"]]</code></td><td>Un DataFrame con dos columnas</td></tr>
+          <tr><td><code class="inl">df.loc[5, "nombre"]</code></td><td>Celda por <b>etiqueta</b> de fila/columna</td></tr>
+          <tr><td><code class="inl">df.iloc[5, 0]</code></td><td>Celda por <b>posición</b> entera (como NumPy)</td></tr>
+          <tr><td><code class="inl">df.loc[df.edad &gt; 30]</code></td><td>Filtrado booleano</td></tr>
+          <tr><td><code class="inl">df.loc[:, "a":"c"]</code></td><td>Rango de columnas por etiqueta (<b>inclusivo</b> en loc)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Filtrado y ordenación</h3>
+    <pre>df[df[<span class="s">"edad"</span>] &gt;= 18]                 <span class="c"># boolean mask</span>
+df[(df.edad &gt; 25) &amp; (df.ciudad == <span class="s">"Madrid"</span>)]  <span class="c"># varias condiciones con &amp;</span>
+
+df.<span class="f">sort_values</span>(<span class="s">"salario"</span>, ascending=<span class="k">False</span>)
+df.<span class="f">sort_values</span>([<span class="s">"depto"</span>, <span class="s">"salario"</span>], ascending=[<span class="k">True</span>, <span class="k">False</span>])</pre>
+
+    <h3>Limpieza</h3>
+    <pre>df.<span class="f">drop_duplicates</span>()
+df.<span class="f">dropna</span>()                            <span class="c"># filas con cualquier NaN fuera</span>
+df.<span class="f">fillna</span>(0)                           <span class="c"># rellena NaN con 0</span>
+df.<span class="f">fillna</span>({<span class="s">"edad"</span>: df.edad.<span class="f">mean</span>()})   <span class="c"># media por columna</span>
+df[<span class="s">"edad"</span>] = df[<span class="s">"edad"</span>].<span class="f">astype</span>(<span class="k">int</span>)   <span class="c"># cambia tipo</span></pre>
+
+    <h3><code class="inl">groupby</code> y agregación</h3>
+    <pre>df.<span class="f">groupby</span>(<span class="s">"depto"</span>)[<span class="s">"salario"</span>].<span class="f">mean</span>()
+df.<span class="f">groupby</span>(<span class="s">"depto"</span>).<span class="f">agg</span>({<span class="s">"salario"</span>: [<span class="s">"mean"</span>, <span class="s">"max"</span>], <span class="s">"edad"</span>: <span class="s">"mean"</span>})</pre>
+
+    <h3><code class="inl">apply</code> y funciones lambda</h3>
+    <pre>df[<span class="s">"salario_anual"</span>] = df[<span class="s">"salario"</span>].<span class="f">apply</span>(<span class="k">lambda</span> x: x * 12)
+df[<span class="s">"categoria"</span>] = df[<span class="s">"edad"</span>].<span class="f">apply</span>(<span class="k">lambda</span> e: <span class="s">"senior"</span> <span class="k">if</span> e &gt; 40 <span class="k">else</span> <span class="s">"junior"</span>)</pre>
+
+    <h3><code class="inl">merge</code> — unir tablas</h3>
+    <pre>pd.<span class="f">merge</span>(empleados, departamentos, on=<span class="s">"depto_id"</span>, how=<span class="s">"left"</span>)
+<span class="c"># how: "left", "right", "inner", "outer"</span></pre>
+
+    <div class="callout key">
+      <span class="lab">Idea clave</span>
+      <b>Un DataFrame es un dict de columnas (Series) con un índice compartido.</b> Casi todo lo que harás es: filtrar filas (boolean mask) y aplicar operaciones a columnas (vectorizadas o con <code class="inl">apply</code>).
+    </div>
+
+    <h3>Errores típicos</h3>
+    <ul class="clean">
+      <li>Usar <code class="inl">and</code>/<code class="inl">or</code> en vez de <code class="inl">&amp;</code>/<code class="inl">|</code> al filtrar: <code class="inl">ValueError</code>. Y agrupa cada condición con paréntesis.</li>
+      <li>Confundir <code class="inl">loc</code> (etiqueta, inclusivo) con <code class="inl">iloc</code> (posición, exclusivo como listas).</li>
+      <li>Comparar con <code class="inl">==</code> cuando hay NaN: siempre da <code class="inl">False</code>. Usa <code class="inl">isna()</code>.</li>
+      <li>Modificar un slice (<code class="inl">SettingWithCopyWarning</code>): usa <code class="inl">df.loc[filtro, "col"] = ...</code>.</li>
+      <li>Olvidar <code class="inl">index=False</code> al escribir CSV: te mete una columna "Unnamed: 0" al leer de nuevo.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="proyecto">
+  <div class="wrap">
+    <div class="sec-head"><div class="sec-num">★</div><h2>Live Review — prácticas</h2></div>
+    <p class="lead">Dos prácticas, una por bloque. Trabájalas en local y súbelas a tu repo <b>antes</b> de la sesión en vivo.</p>
+
+    <div class="grid g2">
+      <div class="card">
+        <h4>🔢 Práctica 1 · NumPy</h4>
+        <p class="mini"><code class="inl">Practica_live_review_Numpy.ipynb</code></p>
+        <ul class="clean">
+          <li><b>Ejercicio 1:</b> análisis descriptivo (media, mediana, std, min/max).</li>
+          <li><b>Ejercicio 2:</b> comparar dos grupos de datos (A vs B).</li>
+          <li><b>Ejercicio 3:</b> trabajar con un dataset 2D tipo tabla.</li>
+          <li><b>Ejercicio 4:</b> filtrado analítico con máscaras booleanas.</li>
+          <li><b>Ejercicio 5:</b> segmentación con <code class="inl">np.where</code>.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>📊 Práctica 2 · Pandas</h4>
+        <p class="mini"><code class="inl">Practica_live_review_Pandas.ipynb</code> + <code class="inl">practica_empresa.csv</code></p>
+        <ul class="clean">
+          <li><b>Ej. 1-2:</b> crear DataFrame y seleccionar con <code class="inl">loc</code>/<code class="inl">iloc</code>.</li>
+          <li><b>Ej. 3-4:</b> filtrado booleano múltiple y ordenación.</li>
+          <li><b>Ej. 5:</b> limpieza de valores faltantes.</li>
+          <li><b>Ej. 6:</b> <code class="inl">groupby</code> y agregación por departamento.</li>
+          <li><b>Ej. 7:</b> <code class="inl">apply</code> y lambdas para columnas calculadas.</li>
+          <li><b>Ej. 8:</b> <code class="inl">merge</code> de DataFrames.</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>Cómo trabajar las prácticas</h3>
+    <div class="step"><div class="num">1</div><div class="body"><b>Descarga</b> el notebook y el CSV al mismo directorio.</div></div>
+    <div class="step"><div class="num">2</div><div class="body"><b>Lee entero</b> antes de teclear; muchos ejercicios encadenan con el anterior.</div></div>
+    <div class="step"><div class="num">3</div><div class="body"><b>Celda a celda</b>, imprimiendo el resultado para verlo antes de seguir.</div></div>
+    <div class="step"><div class="num">4</div><div class="body"><b>Prueba variantes:</b> cambiar la condición de filtrado, el eje del <code class="inl">mean</code>, el tipo de <code class="inl">merge</code>.</div></div>
+    <div class="step"><div class="num">5</div><div class="body"><b>Sube</b> ambas prácticas al repo personal antes de la sesión.</div></div>
+
+    <div class="callout key">
+      <span class="lab">Idea del sprint en una frase</span>
+      <b>Deja de pensar fila a fila; piensa en columnas y máscaras.</b> El 90% de la limpieza y análisis de datos cabe en: leer el fichero, filtrar filas, transformar columnas, agrupar y escribir el resultado.
+    </div>
+  </div>
+</section>
+
+<section id="checklist">
+  <div class="wrap">
+    <div class="sec-head"><div class="sec-num">✓</div><h2>Checklist del sprint</h2></div>
+    <div class="two-col">
+      <div class="card">
+        <h4>Conceptos que debes dominar</h4>
+        <ul class="clean">
+          <li>Crear arrays NumPy: <code class="inl">array</code>, <code class="inl">zeros</code>, <code class="inl">arange</code>, <code class="inl">linspace</code></li>
+          <li>Atributos <code class="inl">shape</code>, <code class="inl">dtype</code>, <code class="inl">ndim</code> y <code class="inl">reshape</code></li>
+          <li>Operaciones vectorizadas y broadcasting</li>
+          <li>Estadística: <code class="inl">mean</code>, <code class="inl">std</code>, <code class="inl">median</code>, <code class="inl">percentile</code> y <code class="inl">axis</code></li>
+          <li>Filtrado con máscaras booleanas y <code class="inl">np.where</code></li>
+          <li>Series y DataFrames de Pandas</li>
+          <li>Lectura/escritura CSV, Excel, JSON</li>
+          <li><code class="inl">loc</code> vs <code class="inl">iloc</code> y filtrado booleano</li>
+          <li>Limpieza: <code class="inl">dropna</code>, <code class="inl">fillna</code>, <code class="inl">drop_duplicates</code>, <code class="inl">astype</code></li>
+          <li><code class="inl">groupby</code> + <code class="inl">agg</code></li>
+          <li><code class="inl">apply</code> con lambdas</li>
+          <li><code class="inl">merge</code> (<code class="inl">left</code>, <code class="inl">inner</code>, <code class="inl">outer</code>)</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>Práctica con las Live Review</h4>
+        <ul class="clean">
+          <li>Haces análisis descriptivo con NumPy</li>
+          <li>Comparas dos grupos con operaciones de array</li>
+          <li>Filtras con máscara booleana</li>
+          <li>Segmentas con <code class="inl">np.where</code></li>
+          <li>Creas DataFrame y lo exploras con <code class="inl">head</code>/<code class="inl">info</code>/<code class="inl">describe</code></li>
+          <li>Seleccionas correctamente con <code class="inl">loc</code> y <code class="inl">iloc</code></li>
+          <li>Filtras con varias condiciones usando <code class="inl">&amp;</code>/<code class="inl">|</code></li>
+          <li>Limpias NaN y duplicados</li>
+          <li>Agrupas por departamento y agregas</li>
+          <li>Usas <code class="inl">apply</code> para columnas calculadas</li>
+          <li>Haces un <code class="inl">merge</code> correctamente</li>
+          <li>Subes ambas prácticas al repo</li>
+        </ul>
+      </div>
+    </div>
+    <div class="callout key">
+      <span class="lab">Si te quedas con una sola idea</span>
+      <b>Deja de iterar; vectoriza.</b> NumPy y Pandas te dan operaciones que trabajan sobre arrays enteros. Es más rápido, más legible, y es el idioma que habla el resto del ecosistema (scikit-learn, PyTorch, LangChain).
+    </div>
+  </div>
+</section>
+
+<footer>
+  Guía visual del Sprint 03 · Bootcamp IA Engineering · Módulo Herramientas Avanzadas · basada en la teoría de NumPy y Pandas y las dos prácticas Live Review.
+</footer>
+
+
+<script>
+  const links = [...document.querySelectorAll('nav.toc a')];
+  const sections = links.map(a => document.querySelector(a.getAttribute('href')));
+  const obs = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        const id = '#'+e.target.id;
+        links.forEach(a=>a.classList.toggle('active', a.getAttribute('href')===id));
+      }
+    });
+  }, {rootMargin:'-45% 0px -50% 0px', threshold:0});
+  sections.forEach(s=>s&&obs.observe(s));
+</script>
+</body>
+</html>
