@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Git & GitHub — Guía del taller · The Bridge AIE</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --dark:#0d1117;--dark2:#161b22;
+  --surface:#fff;--surface2:#f6f8fa;--border:#d0d7de;
+  --text:#1f2328;--muted:#57606a;
+  --bm:#0969da;--bf:#1a7f37;--bd:#8250df;--bh:#cf222e;--br:#9a6700;
+  --nav-h:52px;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:var(--text);background:var(--surface);line-height:1.6;font-size:15px;}
+
+/* NAV */
+.topnav{position:fixed;top:0;left:0;right:0;z-index:100;height:var(--nav-h);background:var(--dark);border-bottom:1px solid rgba(255,255,255,.1);display:flex;align-items:center;padding:0 20px;gap:0;}
+.nav-brand{font-weight:700;color:#fff;font-size:15px;margin-right:20px;white-space:nowrap;display:flex;align-items:center;gap:8px;}
+.nav-brand-dot{width:8px;height:8px;border-radius:50%;background:var(--bm);}
+.nav-links{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;flex:1;}
+.nav-links::-webkit-scrollbar{display:none;}
+.nl{color:rgba(255,255,255,.55);font-size:13px;text-decoration:none;padding:5px 9px;border-radius:6px;white-space:nowrap;transition:all .15s;}
+.nl:hover{color:#fff;background:rgba(255,255,255,.1);}
+
+/* LAYOUT */
+.layout{display:flex;padding-top:var(--nav-h);}
+.sidebar{width:228px;flex-shrink:0;position:sticky;top:var(--nav-h);height:calc(100vh - var(--nav-h));overflow-y:auto;padding:20px 14px;border-right:1px solid var(--border);scrollbar-width:thin;}
+.sidebar::-webkit-scrollbar{width:4px;}
+.sidebar::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+.toc-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:4px 8px;margin:12px 0 4px;}
+.toc-label:first-child{margin-top:0;}
+.tl{display:block;padding:5px 8px;font-size:13px;color:var(--muted);text-decoration:none;border-radius:6px;margin-bottom:1px;transition:all .15s;}
+.tl:hover{color:var(--text);background:var(--surface2);}
+.tl.active{color:var(--bm);background:#ddf4ff;font-weight:500;}
+
+/* CONTENT */
+.content{flex:1;max-width:840px;padding:40px 48px 80px;}
+.sect{margin-bottom:64px;scroll-margin-top:68px;}
+.sect-tag{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+.sect h2{font-size:26px;font-weight:700;padding-bottom:14px;border-bottom:1px solid var(--border);margin-bottom:24px;}
+.sect h3{font-size:18px;font-weight:600;margin:28px 0 10px;}
+.sect h4{font-size:15px;font-weight:600;margin:20px 0 7px;}
+.sect p{margin-bottom:12px;line-height:1.7;}
+.sect ul,.sect ol{padding-left:20px;margin-bottom:12px;}
+.sect li{margin-bottom:5px;line-height:1.6;}
+
+/* CODE BLOCKS */
+.code-wrap{position:relative;margin:10px 0 16px;}
+pre.code{background:var(--dark);color:#e6edf3;border-radius:10px;padding:16px 48px 16px 16px;font-family:'JetBrains Mono','Courier New',monospace;font-size:13px;line-height:1.7;overflow-x:auto;border:1px solid rgba(255,255,255,.08);}
+.code-copy{position:absolute;top:8px;right:8px;background:rgba(255,255,255,.1);color:#aaa;border:none;border-radius:5px;padding:4px 8px;font-size:11px;cursor:pointer;font-family:inherit;transition:all .15s;}
+.code-copy:hover{background:rgba(255,255,255,.2);color:#fff;}
+.cm{color:#8b949e;}
+.ck{color:#79c0ff;}
+.cv{color:#ffa657;}
+.cs{color:#a5d6ff;}
+
+/* INLINE CODE */
+code{font-family:'JetBrains Mono','Courier New',monospace;font-size:13px;background:var(--surface2);padding:2px 6px;border-radius:4px;border:1px solid var(--border);}
+
+/* CALLOUTS */
+.note{padding:12px 16px;border-radius:8px;margin:14px 0;font-size:14px;line-height:1.6;}
+.note strong{display:block;margin-bottom:3px;font-size:13px;font-weight:700;letter-spacing:.03em;}
+.note-info{background:#ddf4ff;border-left:3px solid var(--bm);}
+.note-tip{background:#dafbe1;border-left:3px solid var(--bf);}
+.note-warn{background:#fff8c5;border-left:3px solid var(--br);}
+.note-danger{background:#ffebe9;border-left:3px solid var(--bh);}
+
+/* EXERCISES */
+.exercise{background:var(--surface2);border:1px solid var(--border);border-left:4px solid var(--bm);border-radius:8px;padding:20px;margin:24px 0;}
+.ex-label{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--bm);margin-bottom:8px;}
+.exercise h4{font-size:16px;font-weight:600;margin-bottom:12px;}
+.exercise ol{padding-left:18px;}
+.exercise li{margin-bottom:6px;font-size:14px;}
+.exercise .bonus{color:var(--br);font-weight:600;}
+
+/* BRANCH BADGES */
+.bb{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-family:'JetBrains Mono',monospace;padding:2px 8px;border-radius:20px;font-weight:500;vertical-align:middle;}
+.bb::before{content:'';width:7px;height:7px;border-radius:50%;}
+.bb-main{background:#ddf4ff;color:var(--bm);border:1px solid #b6e3ff;}.bb-main::before{background:var(--bm);}
+.bb-feature{background:#dafbe1;color:var(--bf);border:1px solid #b6f0c4;}.bb-feature::before{background:var(--bf);}
+.bb-develop{background:#fbefff;color:var(--bd);border:1px solid #e2c5ff;}.bb-develop::before{background:var(--bd);}
+.bb-hotfix{background:#ffebe9;color:var(--bh);border:1px solid #ffc1ba;}.bb-hotfix::before{background:var(--bh);}
+.bb-release{background:#fff8c5;color:var(--br);border:1px solid #f1e05a;}.bb-release::before{background:var(--br);}
+
+/* BRANCH DIAGRAMS */
+.branch-diagram{background:var(--dark);border-radius:10px;padding:20px;margin:16px 0;overflow-x:auto;font-family:'JetBrains Mono','Courier New',monospace;font-size:13px;line-height:2;border:1px solid rgba(255,255,255,.08);}
+.bm{color:#79c0ff;font-weight:700;}
+.bf{color:#7ee787;font-weight:700;}
+.bd{color:#d2a8ff;font-weight:700;}
+.bh{color:#ffa198;font-weight:700;}
+.br{color:#e3b341;font-weight:700;}
+.bc{color:#e6edf3;}
+
+/* FLOW COMPARISON */
+.flow-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:20px 0;}
+.flow-card{border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+.flow-card-head{padding:12px 16px;font-weight:600;font-size:14px;}
+.fch-simple{background:#dafbe1;color:#1a5c3a;}
+.fch-full{background:#fbefff;color:#5319d4;}
+.flow-card-body{padding:14px 16px;font-size:13px;color:var(--muted);}
+.flow-card-body ul{padding-left:16px;}
+.flow-card-body li{margin-bottom:5px;}
+.flow-card-body strong{color:var(--text);}
+
+/* TABLE */
+table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px;}
+th{background:var(--surface2);text-align:left;padding:9px 12px;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border);}
+td{padding:9px 12px;border-bottom:1px solid var(--surface2);vertical-align:top;}
+tr:last-child td{border-bottom:none;}
+
+/* REF CARD */
+.ref-section{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:20px;margin:16px 0;}
+.ref-section h4{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:12px;}
+.ref-row{display:flex;gap:12px;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px;align-items:baseline;}
+.ref-row:last-child{border-bottom:none;}
+.ref-cmd{font-family:'JetBrains Mono',monospace;color:var(--bm);min-width:280px;flex-shrink:0;}
+.ref-desc{color:var(--muted);}
+
+@media(max-width:900px){
+  .sidebar{display:none;}
+  .content{padding:24px 20px 60px;max-width:100%;}
+  .flow-grid{grid-template-columns:1fr;}
+  .ref-row{flex-direction:column;gap:2px;}
+  .ref-cmd{min-width:0;}
+}
+
+/* añadidos revisión nov 2026 */
+.content table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px;}
+.content th{background:var(--surface2);text-align:left;padding:8px 10px;border-bottom:2px solid var(--border);font-size:13px;}
+.content td{padding:8px 10px;border-bottom:1px solid var(--border);vertical-align:top;}
+.content td code,.content th code{white-space:nowrap;}
+.table-wrap{overflow-x:auto;}
+.content ul.checklist{list-style:none;padding-left:4px;}
+.content ul.checklist li::before{content:'☐ ';color:var(--muted);}
+.content pre.diagram{color:#e6edf3;line-height:1.45;}
+.version-banner{background:#ddf4ff;border:1px solid #54aeff;border-radius:8px;padding:10px 14px;margin:0 0 22px;font-size:14px;}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="nav-brand"><span class="nav-brand-dot"></span>Git & GitHub</div>
+  <div class="nav-links">
+    <a class="nl" href="#prework">Pre-work</a>
+    <a class="nl" href="#intro">Conceptos</a>
+    <a class="nl" href="#comandos">Comandos</a>
+    <a class="nl" href="#ramas">Ramas</a>
+    <a class="nl" href="#github">GitHub</a>
+    <a class="nl" href="#flujo">Flujo del bootcamp</a>
+    <a class="nl" href="#commits">Buenas prácticas</a>
+    <a class="nl" href="#ref">Chuleta</a>
+    <a class="nl" href="#ampliacion">Ampliación</a>
+    <a class="nl" href="#enlaces">Recursos</a>
+  </div>
+</nav>
+
+<div class="layout">
+<aside class="sidebar">
+  <div class="toc-label">Antes de empezar</div>
+  <a class="tl" href="#prework">Antes de la sesión (pre-work obligatorio)</a>
+  <div class="toc-label">Lo básico</div>
+  <a class="tl" href="#intro">¿Qué es Git?</a>
+  <a class="tl" href="#comandos">Primeros comandos</a>
+  <a class="tl" href="#ramas">Ramas, merge y conflictos</a>
+  <div class="toc-label">Trabajo en equipo</div>
+  <a class="tl" href="#github">GitHub: subir, bajar y Pull Requests</a>
+  <a class="tl" href="#flujo">El flujo de ramas de los Team Challenges</a>
+  <a class="tl" href="#commits">Buenas prácticas</a>
+  <a class="tl" href="#ref">Chuleta de comandos</a>
+  <div class="toc-label">Para saber más</div>
+  <a class="tl" href="#ampliacion">Ampliación (opcional, no entra en la sesión)</a>
+  <a class="tl" href="#enlaces">Enlaces de interés</a>
+</aside>
+
+<main class="content">
+<div class="version-banner"><strong>Versión revisada (noviembre 2026).</strong> Versión introductoria: lo mínimo para trabajar en un Team Challenge. Flujo de ramas: <code>feature/*</code> → <code>develop</code> con squash, <code>develop</code> → <code>main</code> con merge commit. La sección <em>Ampliación</em> es opcional.</div>
+
+<section class="sect" id="prework">
+  <div class="sect-tag">pre-work</div>
+  <h2>Antes de la sesión (pre-work obligatorio)</h2>
+<p>En la sesión no hay tiempo para instalar nada. <strong>Haz esto antes</strong>; al empezar solo comprobaremos que funciona.</p>
+<ol>
+<li>Instala <strong>Git</strong> (en Windows, Git for Windows, que incluye Git Bash) y <strong>VS Code</strong>.</li>
+<li>Crea una cuenta en <a href="https://github.com">github.com</a>.</li>
+<li>Instala <strong>GitHub CLI</strong> desde <a href="https://cli.github.com">cli.github.com</a> y conéctalo con tu cuenta:</li>
+</ol>
+<div class="code-wrap"><pre class="code"><span class="ck">gh auth</span> login         <span class="cm"> # elige: GitHub.com → HTTPS → Login with a web browser</span>
+<span class="ck">gh auth</span> status        <span class="cm"> # debe decir &quot;Logged in to github.com&quot;</span></pre><button class="code-copy" onclick="copyCode(this)">Copiar</button></div>
+<ol>
+<li>Copia y pega este bloque en la terminal (cambia nombre y email):</li>
+</ol>
+<div class="code-wrap"><pre class="code"><span class="ck">git config</span> --global user.name &quot;Tu Nombre&quot;
+<span class="ck">git config</span> --global user.email &quot;tu@email.com&quot;
+<span class="ck">git config</span> --global init.defaultBranch main
+<span class="ck">git config</span> --global pull.rebase false
+<span class="ck">git config</span> --global push.autoSetupRemote true
+<span class="ck">git config</span> --global core.editor &quot;code --wait&quot;
+<span class="ck">git config</span> --global alias.lg &quot;log --oneline --graph --all --decorate&quot;</pre><button class="code-copy" onclick="copyCode(this)">Copiar</button></div>
+<ol>
+<li>Comprueba con <code>git --version</code> y <code>git config --global --list</code>.</li>
+</ol>
+<div class="note note-info"><strong>Nota</strong>No hace falta entender cada línea todavía. En resumen: tu nombre en los commits, la rama principal se llama <code>main</code>, <code>git pull</code> funciona igual que en los Team Challenges, <code>git push</code> es más sencillo, VS Code es el editor y <code>git lg</code> dibuja el árbol de ramas.</div>
+</section>
+<section class="sect" id="intro">
+  <div class="sect-tag">01 — conceptos</div>
+  <h2>¿Qué es Git?</h2>
+<p>Git es un <strong>sistema de control de versiones</strong>: guarda el historial de tu proyecto para que puedas volver atrás y trabajar en equipo sin pisaros.</p>
+<div class="note note-info"><strong>Nota</strong><strong>Git ≠ GitHub.</strong> Git es el programa que usas en tu ordenador. GitHub es la web donde se guarda una copia del proyecto para compartirla con el equipo.</div>
+<h3>Las tres zonas</h3>
+<div class="code-wrap"><pre class="code diagram">Tus archivos  ──git add──▶  Staging (preparado)  ──git commit──▶  Historial (.git)</pre></div>
+<ul>
+<li><strong>Repositorio</strong>: la carpeta que Git vigila. La historia vive en la carpeta oculta <code>.git/</code>.</li>
+<li><strong>Commit</strong>: una foto del proyecto en un momento, con un mensaje que explica qué cambió.</li>
+<li><strong>Staging</strong>: la "sala de espera" donde eliges qué cambios entran en el próximo commit.</li>
+</ul>
+</section>
+<section class="sect" id="comandos">
+  <div class="sect-tag">02 — primeros comandos</div>
+  <h2>Primeros comandos</h2>
+<div class="code-wrap"><pre class="code"><span class="ck">git init</span>                   <span class="cm"> # convierte la carpeta en un repositorio</span>
+<span class="ck">git status</span>                 <span class="cm"> # ¿qué ha cambiado? (úsalo todo el rato)</span>
+<span class="ck">git add</span> archivo.txt        <span class="cm"> # prepara un archivo</span>
+<span class="ck">git add</span> .                  <span class="cm"> # prepara todos los cambios</span>
+<span class="ck">git commit</span> -m &quot;mensaje&quot;    <span class="cm"> # guarda la foto</span>
+<span class="ck">git lg</span>                     <span class="cm"> # ver el historial como un árbol</span></pre><button class="code-copy" onclick="copyCode(this)">Copiar</button></div>
+<h3>.gitignore</h3>
+<p>Lista de archivos que Git <strong>nunca</strong> debe guardar. Créalo al principio. Para proyectos de Python e IA, como mínimo:</p>
+<div class="code-wrap"><pre class="code">.env
+venv/
+.venv/
+__pycache__/
+.ipynb_checkpoints/</pre><button class="code-copy" onclick="copyCode(this)">Copiar</button></div>
+<div class="note note-danger"><strong>Importante</strong>Tus claves de API (OpenAI, Gemini, TMDB...) van en <code>.env</code> y <strong>nunca</strong> se suben a GitHub. Si una clave se sube por error, hay que anularla y crear otra: borrar el commit no basta.</div>
+<h3>Deshacer lo más habitual</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Quiero...</th>
+<th>Comando</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Descartar los cambios de un archivo</td>
+<td><code>git restore archivo.txt</code></td>
+</tr>
+<tr>
+<td>Sacar un archivo del staging</td>
+<td><code>git restore --staged archivo.txt</code></td>
+</tr>
+<tr>
+<td>Deshacer un commit que ya está en GitHub</td>
+<td><code>git revert &lt;hash&gt;</code> (crea un commit que lo deshace)</td>
+</tr>
+</tbody>
+</table></div>
+<div class="note note-tip"><strong>Tip</strong>Si te lías, para y pregunta antes de probar comandos que encuentres por internet como <code>reset --hard</code>. Casi todo tiene arreglo si no se borra nada.</div>
+<div class="exercise"><div class="ex-label">Ejercicio 1</div><h4>Tu primer repositorio</h4>
+<ol>
+<li>Crea una carpeta <code>mi-proyecto</code>, entra en ella y ejecuta <code>git init</code>.</li>
+<li>Crea un <code>.gitignore</code> con la línea <code>.env</code>.</li>
+<li>Crea <code>README.md</code> con una frase y un archivo <code>.env</code> con <code>API_KEY=123</code>.</li>
+<li>Ejecuta <code>git status</code>: aparece <code>README.md</code>, pero <strong>no</strong> <code>.env</code>.</li>
+<li><code>git add .</code> y <code>git commit -m "chore: estructura inicial"</code>.</li>
+<li>Mira el resultado con <code>git lg</code>.</li>
+</ol></div>
+</section>
+<section class="sect" id="ramas">
+  <div class="sect-tag">03 — ramas y merge</div>
+  <h2>Ramas, merge y conflictos</h2>
+<p>Una <strong>rama</strong> es una línea de trabajo paralela: puedes probar cosas sin tocar la versión buena. Al terminar, se <strong>fusiona</strong> (<em>merge</em>) con la rama principal.</p>
+<div class="code-wrap"><pre class="code diagram">main:      A ── B ── C ─────────── F
+                      \           /
+feature:               D ── E ───┘</pre></div>
+<div class="code-wrap"><pre class="code"><span class="ck">git switch</span> -c feature/login  <span class="cm"> # crea una rama y te mueve a ella</span>
+<span class="ck">git switch</span> main              <span class="cm"> # cambia a otra rama</span>
+<span class="ck">git merge</span> feature/login      <span class="cm"> # trae los cambios de feature/login a la rama en la que estás</span>
+<span class="ck">git branch</span> -d feature/login  <span class="cm"> # borra la rama cuando ya está fusionada</span></pre><button class="code-copy" onclick="copyCode(this)">Copiar</button></div>
+<div class="note note-info"><strong>Nota</strong>En tutoriales antiguos verás <code>git checkout</code>. Hace lo mismo, pero hoy se usa <code>git switch</code> porque es más claro.</div>
+<h3>Conflictos</h3>
+<p>Hay conflicto cuando dos ramas cambian <strong>la misma línea</strong>. Git no elige por ti y marca el archivo:</p>
+<div class="code-wrap"><pre class="code diagram">&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+lo que hay en tu rama
+=======
+lo que viene de la otra rama
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; feature/login</pre></div>
+<p>Para resolverlo:</p>
+<ol>
+<li>Abre el archivo en VS Code y pulsa <strong>Resolve in Merge Editor</strong> (o edítalo a mano y borra las marcas <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code>, <code>=======</code>, <code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code>).</li>
+<li>Deja el contenido correcto y guarda.</li>
+<li><code>git add archivo</code> y <code>git commit --no-edit</code>.</li>
+</ol>
+<div class="note note-tip"><strong>Tip</strong>Un conflicto no es un error: es Git preguntándote qué versión quieres. Si te bloqueas, <code>git merge --abort</code> deja todo como estaba antes del merge.</div>
+<div class="exercise"><div class="ex-label">Ejercicio 2</div><h4>Ramas Patronus (con conflicto a propósito)</h4>
+<ol>
+<li>Crea la carpeta <code>Patronus</code>, ejecuta <code>git init</code>, crea <code>patronus.txt</code> vacío y haz un commit.</li>
+<li>Crea dos ramas: <code>git branch harry</code> y <code>git branch snape</code>.</li>
+<li><code>git switch harry</code>, luego <code>echo "PATRONUS: ciervo" &gt; patronus.txt</code> y commit <code>"feat: patronus de Harry"</code>.</li>
+<li><code>git switch snape</code>, luego <code>echo "PATRONUS: cierva" &gt; patronus.txt</code> y commit <code>"feat: patronus de Snape"</code>.</li>
+<li>Mira el árbol con <code>git lg</code>: dos ramas salen del mismo commit.</li>
+<li><code>git switch main</code> y <code>git merge harry</code>. Sin problemas.</li>
+<li><code>git merge snape</code>: <strong>conflicto</strong>, porque las dos ramas cambiaron la misma línea.</li>
+<li>Resuélvelo en VS Code dejando las dos líneas, y después <code>git add patronus.txt</code> y <code>git commit --no-edit</code>.</li>
+<li><code>git lg</code> para ver el merge, y <code>git branch -d harry snape</code>.</li>
+</ol></div>
+</section>
+<section class="sect" id="github">
+  <div class="sect-tag">04 — github</div>
+  <h2>GitHub: subir, bajar y Pull Requests</h2>
+<div class="code-wrap"><pre class="code"><span class="ck">git clone</span> &lt;url&gt;         <span class="cm"> # descarga un repo de GitHub a tu ordenador</span>
+<span class="ck">git push</span>                <span class="cm"> # sube tus commits de la rama actual</span>
+<span class="ck">git pull</span>                <span class="cm"> # baja los cambios de los demás a la rama actual</span></pre><button class="code-copy" onclick="copyCode(this)">Copiar</button></div>
+<ul>
+<li><code>origin</code> es el nombre que Git da al repositorio de GitHub.</li>
+<li>La primera vez que haces <code>git push</code> en una rama nueva, se crea también en GitHub.</li>
+</ul>
+<h3>Pull Request (PR)</h3>
+<p>Una <strong>PR</strong> es la forma de pedir: "revisad mi rama y, si está bien, fusionadla". En los Team Challenges <strong>todo</strong> entra por PR.</p>
+<ol>
+<li>Subes tu rama con <code>git push</code>.</li>
+<li>Abres la PR en GitHub (botón <em>Compare &amp; pull request</em>) o con <code>gh pr create --base develop --fill</code>.</li>
+<li><strong>Comprueba que la base es <code>develop</code></strong>: GitHub propone <code>main</code> por defecto.</li>
+<li>Un compañero la revisa en <em>Files changed</em> y la aprueba.</li>
+<li>Se fusiona con el botón verde y se borra la rama.</li>
+</ol>
+<div class="exercise"><div class="ex-label">Ejercicio 3</div><h4>Subir tu proyecto a GitHub</h4>
+<ol>
+<li>Dentro de <code>mi-proyecto</code> (Ejercicio 1): <code>gh repo create mi-proyecto --public --source=. --push</code>.</li>
+<li>Abre el repo en GitHub y comprueba que <strong>no</strong> está <code>.env</code>.</li>
+<li>Edita <code>README.md</code> en la web de GitHub y guarda (<em>Commit changes</em>).</li>
+<li>En tu ordenador, <code>git pull</code> y comprueba que el cambio ha llegado.</li>
+</ol></div>
+</section>
+<section class="sect" id="flujo">
+  <div class="sect-tag">05 — flujo del bootcamp</div>
+  <h2>El flujo de ramas de los Team Challenges</h2>
+<p>En los Team Challenges usaréis una versión sencilla de <strong>Gitflow</strong> con tres tipos de rama:</p>
+<div class="code-wrap"><pre class="code diagram">main        ●──────────────────────────────────●   ← versión final (un merge el último día)
+            │                                  ↑
+develop     ●────────●─────────●─────────●─────┘   ← donde se junta el trabajo del equipo
+                     ↑         ↑         ↑
+feature/01  ●──●─────┘         │         │         ← una rama por tarea
+feature/02       ●──●──●───────┘         │
+feature/03                ●──●───────────┘</pre></div>
+<p><strong>Cuatro reglas:</strong></p>
+<ol>
+<li>Nadie hace commit directo en <code>main</code> ni en <code>develop</code>.</li>
+<li>Cada tarea va en su rama <code>feature/...</code>, creada desde <code>develop</code>.</li>
+<li>Las features entran en <code>develop</code> por PR, con <strong>Squash and merge</strong>.</li>
+<li>El último día, <code>develop</code> entra en <code>main</code> con una PR y <strong>Create a merge commit</strong>.</li>
+</ol>
+<h3>El día a día, en comandos</h3>
+<div class="code-wrap"><pre class="code"><span class="ck">git switch</span> develop &amp;&amp; git pull                <span class="cm"> # 1. parto de develop actualizado</span>
+<span class="ck">git switch</span> -c feature/mi-tarea                <span class="cm"> # 2. creo mi rama</span>
+<span class="ck">git add</span> . &amp;&amp; git commit -m &quot;feat: lo que hice&quot;<span class="cm"> # 3. trabajo y hago commits</span>
+<span class="ck">git push</span>                                      <span class="cm"> # 4. subo la rama</span>
+<span class="ck">gh pr</span> create --base develop --fill            <span class="cm"> # 5. abro la PR hacia develop</span>
+<span class="cm"># ... un compañero revisa y fusiona con Squash and merge ...</span>
+<span class="ck">git switch</span> develop &amp;&amp; git pull                <span class="cm"> # 6. vuelvo a develop actualizado</span>
+<span class="ck">git branch</span> -D feature/mi-tarea                <span class="cm"> # 7. borro mi rama local</span></pre><button class="code-copy" onclick="copyCode(this)">Copiar</button></div>
+<div class="note note-info"><strong>Nota</strong>¿Por qué <code>-D</code> y no <code>-d</code>? Con <em>Squash and merge</em>, GitHub junta tus commits en uno nuevo, y Git no reconoce tu rama como fusionada. Es normal.</div>
+<div class="note note-tip"><strong>Tip</strong>Si un compañero ha fusionado algo que necesitas mientras trabajas en tu rama: <code>git fetch origin</code> y <code>git merge origin/develop</code>.</div>
+<h3>¿Y el Gitflow "completo"?</h3>
+<p>En empresas con versiones numeradas (v1.0, v1.1...) se añaden dos ramas más. Basta con saber que existen:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Rama</th>
+<th>Para qué</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>release/*</code></td>
+<td>Preparar una versión antes de publicarla en <code>main</code></td>
+</tr>
+<tr>
+<td><code>hotfix/*</code></td>
+<td>Arreglar un error urgente que ya está en <code>main</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>En los Team Challenges <strong>no</strong> se usan. El profesor lo enseñará en una demo.</p>
+<div class="exercise"><div class="ex-label">Ejercicio 4</div><h4>Ensayo del Team Challenge (en pareja o solo)</h4>
+<ol>
+<li>Persona A: <code>gh repo create tc-ensayo --public --add-readme --clone</code> y <code>cd tc-ensayo</code>. Añade a la pareja en Settings → Collaborators.</li>
+<li>Persona A crea <code>develop</code> y la sube: <code>git switch -c develop</code> y <code>git push</code>.</li>
+<li>Persona B: <code>git clone &lt;url&gt;</code>, <code>cd tc-ensayo</code> y <code>git switch develop</code>.</li>
+<li>Persona B: <code>git switch -c feature/saludo</code>, crea <code>saludo.txt</code>, commit y <code>git push</code>.</li>
+<li>Persona B abre la PR con base <code>develop</code>: <code>gh pr create --base develop --fill</code>.</li>
+<li>Persona A la revisa en GitHub y la fusiona con <strong>Squash and merge</strong>.</li>
+<li>Persona B: <code>git switch develop</code>, <code>git pull</code> y <code>git branch -D feature/saludo</code>.</li>
+<li>Final: una PR de <code>develop</code> a <code>main</code> fusionada con <strong>Create a merge commit</strong>.</li>
+</ol>
+<p>Si lo haces solo, haz los dos papeles.</p></div>
+</section>
+<section class="sect" id="commits">
+  <div class="sect-tag">06 — buenas prácticas</div>
+  <h2>Buenas prácticas</h2>
+<h3>Mensajes de commit (Conventional Commits)</h3>
+<p>Formato: <code>tipo: qué has hecho</code>. En español o en inglés, pero todo el equipo igual.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Tipo</th>
+<th>Cuándo</th>
+<th>Ejemplo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>feat</code></td>
+<td>Algo nuevo</td>
+<td><code>feat: función fetch_movie_details</code></td>
+</tr>
+<tr>
+<td><code>fix</code></td>
+<td>Arreglo de un error</td>
+<td><code>fix: manejar tmdbId nulo</code></td>
+</tr>
+<tr>
+<td><code>docs</code></td>
+<td>Documentación</td>
+<td><code>docs: instrucciones de claves en README</code></td>
+</tr>
+<tr>
+<td><code>refactor</code></td>
+<td>Reorganizar sin cambiar el resultado</td>
+<td><code>refactor: extraer el groupby a una función</code></td>
+</tr>
+<tr>
+<td><code>chore</code></td>
+<td>Mantenimiento</td>
+<td><code>chore: actualizar requirements.txt</code></td>
+</tr>
+</tbody>
+</table></div>
+<h3>Antes de cada <code>git push</code></h3>
+<ul class="checklist"><li><code>git status</code> no muestra nada raro (ni <code>.env</code>)</li>
+<li>Estás en tu rama, no en <code>main</code> ni en <code>develop</code> (<code>git branch --show-current</code>)</li>
+<li>Si es un notebook: <em>Restart &amp; Run All</em> y sin claves en las salidas</li>
+<li>El mensaje del commit explica qué has hecho</li>
+</ul>
+<h3>Notebooks en equipo</h3>
+<p>Un notebook es un archivo enorme y sus conflictos son muy difíciles de resolver. Por eso en los Team Challenges <strong>cada notebook lo edita una sola persona</strong>.</p>
+</section>
+<section class="sect" id="ref">
+  <div class="sect-tag">07 — chuleta</div>
+  <h2>Chuleta de comandos</h2>
+<div class="code-wrap"><pre class="code"><span class="cm"># Básico</span>
+<span class="ck">git status</span>                       <span class="cm"> # qué ha cambiado</span>
+<span class="ck">git add</span> .                        <span class="cm"> # preparar todo</span>
+<span class="ck">git commit</span> -m &quot;feat: mensaje&quot;    <span class="cm"> # guardar</span>
+<span class="ck">git lg</span>                           <span class="cm"> # ver el árbol</span>
+
+<span class="cm"># Ramas</span>
+<span class="ck">git switch</span> -c feature/mi-tarea   <span class="cm"> # crear rama y moverme</span>
+<span class="ck">git switch</span> develop               <span class="cm"> # cambiar de rama</span>
+<span class="ck">git merge</span> &lt;rama&gt;                 <span class="cm"> # fusionar en la rama actual</span>
+<span class="ck">git branch</span> -D &lt;rama&gt;             <span class="cm"> # borrar rama local</span>
+
+<span class="cm"># GitHub</span>
+<span class="ck">git clone</span> &lt;url&gt;                  <span class="cm"> # descargar repo</span>
+<span class="ck">git pull</span>                         <span class="cm"> # bajar cambios</span>
+<span class="ck">git push</span>                         <span class="cm"> # subir cambios</span>
+<span class="ck">gh pr</span> create --base develop --fill   <span class="cm"> # abrir PR hacia develop</span>
+
+<span class="cm"># Si algo sale mal</span>
+<span class="ck">git restore</span> &lt;archivo&gt;            <span class="cm"> # descartar cambios de un archivo</span>
+<span class="ck">git merge</span> --abort                <span class="cm"> # cancelar un merge con conflictos</span></pre><button class="code-copy" onclick="copyCode(this)">Copiar</button></div>
+</section>
+<section class="sect" id="ampliacion">
+  <div class="sect-tag">ampliación (opcional)</div>
+  <h2>Ampliación (opcional, no entra en la sesión)</h2>
+<p>Nada de esta sección es necesario para los Team Challenges. Está aquí para quien quiera ir más allá.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Comando</th>
+<th>Para qué</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>git reflog</code></td>
+<td>Ver todos los movimientos de HEAD y recuperar commits "perdidos" tras un <code>reset</code></td>
+</tr>
+<tr>
+<td><code>git stash push -m "msg"</code> / <code>git stash pop</code></td>
+<td>Guardar trabajo a medias sin hacer commit</td>
+</tr>
+<tr>
+<td><code>git commit --amend</code> + <code>git push --force-with-lease</code></td>
+<td>Rehacer el último commit de <strong>tu</strong> rama (nunca en <code>main</code>/<code>develop</code>)</td>
+</tr>
+<tr>
+<td><code>git diff main...develop</code></td>
+<td>Ver lo que <code>develop</code> trae respecto a <code>main</code></td>
+</tr>
+<tr>
+<td><code>git tag -a v1.0.0 -m "..."</code> + <code>git push --follow-tags</code></td>
+<td>Marcar versiones</td>
+</tr>
+<tr>
+<td><code>gh repo fork AUTOR/repo --clone</code></td>
+<td>Contribuir a un proyecto ajeno</td>
+</tr>
+<tr>
+<td><code>git restore --ours/--theirs archivo</code></td>
+<td>En un conflicto, quedarse entera con una de las versiones</td>
+</tr>
+<tr>
+<td><code>nbdime</code> (<code>pip install nbdime</code>)</td>
+<td>Ver diffs legibles de notebooks</td>
+</tr>
+</tbody>
+</table></div>
+<h3>Ejercicio opcional · Gitflow completo en local</h3>
+<p>Reproduce en una carpeta <code>tienda-online</code> el ciclo completo: <code>feature/productos</code> → <code>develop</code> → <code>release/1.0.0</code> → <code>main</code> (tag <code>v1.0.0</code>) → hotfix <code>1.0.1</code> desde <code>main</code> → <code>feature/carrito</code> → <code>release/1.1.0</code>. Usa <code>git merge --no-ff</code> en todos los merges para ver el grafo. La solución está en <code>scripts/demo_gitflow.sh</code> (ejecútalo y compara con tu <code>git lg</code>).</p>
+</section>
+<section class="sect" id="enlaces">
+  <div class="sect-tag">recursos</div>
+  <h2>Enlaces de interés</h2>
+<ul>
+<li><a href="https://learngitbranching.js.org/?locale=es_ES">Learn Git Branching</a>: practica ramas de forma visual en el navegador.</li>
+<li><a href="https://git-scm.com/book/es/v2">Pro Git</a>: el libro oficial, gratis y en español.</li>
+<li><a href="https://www.conventionalcommits.org/es/v1.0.0/">Conventional Commits</a>.</li>
+<li><a href="https://cbea.ms/git-commit/">How to Write a Git Commit Message</a>.</li>
+</ul>
+</section>
+
+</main>
+</div>
+
+<script>
+function copyCode(btn){
+  const pre=btn.previousElementSibling;
+  navigator.clipboard.writeText(pre.innerText).then(()=>{
+    const orig=btn.textContent;btn.textContent='¡Copiado!';
+    setTimeout(()=>btn.textContent=orig,1800);
+  });
+}
+
+const sects=document.querySelectorAll('.sect');
+const links=document.querySelectorAll('.tl');
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      links.forEach(l=>l.classList.remove('active'));
+      const link=document.querySelector(`.tl[href="#${e.target.id}"]`);
+      if(link)link.classList.add('active');
+    }
+  });
+},{rootMargin:'-20% 0px -70% 0px',threshold:0});
+sects.forEach(s=>obs.observe(s));
+</script>
+</body>
+</html>
