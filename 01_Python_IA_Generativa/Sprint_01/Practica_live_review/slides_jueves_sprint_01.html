@@ -1,0 +1,1652 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Sprint 01 · Sonora</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one 16:9-ish slide fills the viewport; white content slides, black cover, red block dividers; dark code panels on the right. */
+:root{
+  --red:#F42C37; --red-deep:#C81E28; --ink:#1D1D1B; --paper:#FFFFFF; --mist:#F5F2F2; --line:#E4DDDD;
+  --muted:#5E5856; --code-bg:#1D1D1B; --code-fg:#F2EFEE; --code-dim:#8E8784;
+  --tk-kw:#FF6F77; --tk-str:#FFC94D; --tk-num:#7FD0FF; --tk-bi:#FFFFFF; --ok:#3FB37F;
+  --f-display:"Archivo","Arial Black","Helvetica Neue",Arial,sans-serif;
+  --f-body:"IBM Plex Sans","Helvetica Neue",Arial,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+  --fs-base:clamp(15px, 0.55vw + 9px, 21px);
+  --fs-code:clamp(12.5px, 0.42vw + 7.5px, 18px);
+  color-scheme: light;
+}
+html,body{height:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:var(--fs-base);line-height:1.5;overflow:hidden}
+*{box-sizing:border-box}
+.deck{position:relative;height:100%;width:100%}
+.slide{position:absolute;inset:0;display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));
+  padding-block:clamp(18px,3.2vh,44px) calc(clamp(18px,3vh,36px) + 56px);
+  background:var(--paper);visibility:hidden;opacity:0;transition:opacity .25s ease}
+.slide.active{visibility:visible;opacity:1}
+@media (prefers-reduced-motion: reduce){.slide{transition:none}}
+.inner{width:100%;max-width:1320px;margin:0 auto;display:flex;flex-direction:column;gap:clamp(12px,2vh,24px);flex:1;min-height:0}
+.inner.center{justify-content:center}
+
+/* Typography */
+h1,h2,h3{font-family:var(--f-display);margin:0;text-wrap:balance;letter-spacing:-0.01em}
+h1{font-size:clamp(34px,4.8vw,84px);font-weight:900;font-stretch:112%;line-height:1}
+h2{font-size:clamp(24px,2.5vw,46px);font-weight:850;font-stretch:108%;line-height:1.08}
+h3{font-size:clamp(17px,1.3vw,25px);font-weight:800;font-stretch:104%;line-height:1.2}
+p{margin:0;max-width:65ch}
+.eyebrow{display:flex;align-items:center;gap:.6em;font-family:var(--f-display);font-weight:800;font-stretch:115%;text-transform:uppercase;letter-spacing:.09em;font-size:.72em;color:var(--red)}
+.eyebrow::before{content:"";width:.8em;height:.8em;border-radius:.18em;background:var(--red)}
+.lead{font-size:1.18em;color:var(--muted);max-width:60ch}
+code,kbd{font-family:var(--f-mono);font-size:.88em}
+p code, li code, td code{background:var(--mist);border:1px solid var(--line);padding:.05em .35em;border-radius:4px}
+kbd{border:1px solid var(--line);border-bottom-width:3px;border-radius:5px;padding:.05em .4em;background:var(--paper)}
+ul.clean{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:.55em}
+ul.clean li{padding-left:1.25em;position:relative;max-width:62ch}
+ul.clean li::before{content:"";position:absolute;left:0;top:.62em;width:.5em;height:.5em;background:var(--red);border-radius:2px}
+strong{font-weight:600}
+.red{color:var(--red)}
+
+/* Grids */
+.cols{display:grid;grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);gap:clamp(18px,2.6vw,44px);align-items:start;min-height:0}
+.cols.even{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.cols > *{min-width:0}
+.stack{display:flex;flex-direction:column;gap:clamp(10px,1.6vh,18px)}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(12px,1.6vw,22px)}
+.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(10px,1.2vw,18px)}
+@media (max-width:900px){.cols,.cols.even{grid-template-columns:minmax(0,1fr)}.grid3,.grid4{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
+@media (max-width:520px){.grid3,.grid4{grid-template-columns:minmax(0,1fr)}}
+
+/* Tiles */
+.tile{border:1.5px solid var(--line);border-radius:10px;padding:clamp(12px,1.3vw,20px);display:flex;flex-direction:column;gap:.45em;background:var(--paper)}
+.tile .k{font-family:var(--f-display);font-weight:900;font-stretch:115%;font-size:1.6em;line-height:1;color:var(--red)}
+.tile.ink{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.tile.ink p{color:#D9D3D1}
+.tile p{color:var(--muted);font-size:.92em}
+.note{border-left:4px solid var(--red);background:var(--mist);padding:.7em 1em;border-radius:0 8px 8px 0;font-size:.92em;max-width:70ch}
+.note b{font-family:var(--f-display);font-weight:800;text-transform:uppercase;letter-spacing:.06em;font-size:.8em;color:var(--red);margin-right:.4em}
+.ask{display:inline-flex;align-items:center;gap:.5em;align-self:flex-start;background:var(--ink);color:var(--paper);font-family:var(--f-display);font-weight:800;font-stretch:110%;text-transform:uppercase;letter-spacing:.06em;font-size:.72em;padding:.45em .8em;border-radius:6px}
+.ask::before{content:"?";display:inline-grid;place-items:center;width:1.4em;height:1.4em;border-radius:4px;background:var(--red);color:var(--paper)}
+
+/* Tables */
+.tbl-wrap{overflow-x:auto;max-width:100%}
+table{border-collapse:collapse;width:100%;font-size:.86em}
+th{font-family:var(--f-display);font-weight:800;font-stretch:108%;text-align:left;text-transform:uppercase;letter-spacing:.05em;font-size:.8em;color:var(--muted);border-bottom:2px solid var(--ink);padding:.45em .6em}
+td{border-bottom:1px solid var(--line);padding:.42em .6em;vertical-align:top}
+td code{white-space:nowrap}
+
+/* Cover + divider */
+.slide.cover{background:var(--ink);color:var(--paper)}
+.slide.cover .lead{color:#CFC8C6}
+.cover-logo{width:min(380px,70vw);height:auto}
+.meta-row{display:flex;flex-wrap:wrap;gap:.6em 1.6em;font-family:var(--f-display);font-weight:700;font-stretch:110%;text-transform:uppercase;letter-spacing:.08em;font-size:.78em;color:#CFC8C6}
+.meta-row span::before{content:"■ ";color:var(--red)}
+.slide.divider{background:var(--red);color:var(--paper)}
+.slide.divider .num{font-family:var(--f-display);font-weight:900;font-stretch:125%;font-size:clamp(90px,16vw,260px);line-height:.85;letter-spacing:-0.04em;color:var(--ink)}
+.slide.divider h1{color:var(--paper)}
+.slide.divider .lead{color:#FFE3E5}
+.slide.divider .chips{display:flex;flex-wrap:wrap;gap:.5em}
+.slide.divider .chips span{background:var(--ink);color:var(--paper);padding:.3em .7em;border-radius:6px;font-size:.82em;font-family:var(--f-mono)}
+
+/* Code runner */
+.runner{background:var(--code-bg);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;min-width:0;box-shadow:0 1px 0 rgba(0,0,0,.04)}
+.runner-bar{display:flex;align-items:center;gap:.5em;padding:.45em .6em .45em .9em;background:#2A2927;color:var(--code-dim);font-family:var(--f-mono);font-size:calc(var(--fs-code) * .85)}
+.runner-bar .file{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.runner-bar .file::before{content:"";display:inline-block;width:.6em;height:.6em;border-radius:2px;background:var(--red);margin-right:.55em;vertical-align:.05em}
+.btn{font-family:var(--f-display);font-weight:800;font-stretch:108%;letter-spacing:.03em;font-size:calc(var(--fs-code) * .88);border:0;border-radius:6px;padding:.38em .8em;cursor:pointer;background:#3A3836;color:var(--code-fg)}
+.btn:hover{background:#4A4745}
+.btn.run{background:var(--red);color:#fff}
+.btn.run:hover{background:var(--red-deep)}
+.btn:disabled{opacity:.45;cursor:wait}
+.btn:focus-visible,.navbtn:focus-visible,textarea:focus-visible{outline:3px solid #FFC94D;outline-offset:2px}
+.editor{position:relative;font-family:var(--f-mono);font-size:var(--fs-code);line-height:1.55;tab-size:4}
+.editor pre,.editor textarea{margin:0;padding:.85em 1em;white-space:pre;overflow:auto;font:inherit;line-height:inherit;tab-size:4;border:0;width:100%;letter-spacing:0}
+.editor pre{position:absolute;inset:0;pointer-events:none;color:var(--code-fg);overflow:hidden}
+.editor textarea{position:relative;display:block;background:transparent;color:transparent;caret-color:#fff;resize:none;outline:none;min-height:3em}
+.editor textarea::selection{background:rgba(244,44,55,.45);color:transparent}
+.tk-c{color:var(--code-dim);font-style:italic}.tk-s{color:var(--tk-str)}.tk-n{color:var(--tk-num)}.tk-k{color:var(--tk-kw);font-weight:600}.tk-b{color:var(--tk-bi);font-weight:600}
+.stdin{display:flex;flex-direction:column;gap:.25em;padding:.5em 1em .6em;border-top:1px dashed #3d3b39;font-family:var(--f-mono);font-size:calc(var(--fs-code)*.9);color:var(--code-dim)}
+.stdin textarea{background:#2A2927;color:var(--tk-str);border:1px solid #444;border-radius:6px;font:inherit;padding:.35em .6em;resize:vertical;min-height:2.2em}
+.out{margin:0;padding:.75em 1em .9em;border-top:1px solid #3d3b39;font-family:var(--f-mono);font-size:var(--fs-code);line-height:1.5;color:#D8F3E6;white-space:pre-wrap;word-break:break-word;min-height:2.6em;background:#141413;max-height:42vh;overflow:auto}
+.out:empty::before{content:"Salida: pulsa Ejecutar (o Ctrl + Enter)";color:#6F6966;font-style:italic}
+.out .err{color:#FF9AA0}
+.out .err b{color:#fff;background:var(--red);padding:0 .35em;border-radius:3px;font-weight:600;margin-right:.4em}
+.out .echo{color:#9FB7FF}
+.out .inp{color:var(--tk-str)}
+
+/* Markdown playground */
+.md-play{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0;border:1.5px solid var(--line);border-radius:12px;overflow:hidden;min-height:0;flex:1}
+@media (max-width:900px){.md-play{grid-template-columns:minmax(0,1fr)}}
+.md-play textarea{border:0;background:var(--code-bg);color:var(--code-fg);font-family:var(--f-mono);font-size:var(--fs-code);line-height:1.55;padding:1em;resize:none;min-height:45em;outline:none}
+.md-out{padding:1em 1.3em;overflow:auto;background:var(--paper);font-size:.95em}
+.md-out h1{font-size:1.7em;font-stretch:100%}.md-out h2{font-size:1.35em;font-stretch:100%;margin-top:.5em}.md-out h3{font-size:1.1em;margin-top:.4em}
+.md-out p,.md-out ul,.md-out ol,.md-out blockquote,.md-out table,.md-out pre{margin:.5em 0}
+.md-out blockquote{border-left:4px solid var(--line);margin-left:0;padding-left:1em;color:var(--muted)}
+.md-out pre{background:var(--mist);padding:.6em .8em;border-radius:6px;overflow:auto}
+.md-out a{color:var(--red-deep)}
+.md-out hr{border:0;border-top:2px solid var(--line)}
+.md-label{font-family:var(--f-display);font-weight:800;text-transform:uppercase;letter-spacing:.08em;font-size:.68em;padding:.5em 1em;border-bottom:1px solid var(--line);background:var(--mist);color:var(--muted)}
+.md-col{display:flex;flex-direction:column;min-width:0;min-height:0}
+.md-col.src .md-label{background:#2A2927;color:var(--code-dim);border-color:#3d3b39}
+
+/* Error anatomy */
+.anat{background:var(--code-bg);color:var(--code-fg);border-radius:12px;padding:1.1em 1.3em;font-family:var(--f-mono);font-size:calc(var(--fs-code)*1.1);line-height:1.8;overflow-x:auto}
+.anat .hl1{background:var(--red);color:#fff;padding:.05em .35em;border-radius:4px}
+.anat .hl2{border-bottom:3px solid var(--tk-str)}
+.anat .hl3{border-bottom:3px solid var(--tk-num)}
+.spec-raw{margin:0;white-space:pre;line-height:1.5;font-size:var(--fs-code);max-height:62vh;overflow:auto}
+.legend{display:flex;flex-wrap:wrap;gap:.5em 1.4em;font-size:.88em}
+.legend span{display:inline-flex;align-items:center;gap:.45em}
+.legend i{width:1em;height:.6em;border-radius:2px;display:inline-block}
+
+/* Chrome: bottom bar */
+.bar{position:fixed;left:0;right:0;bottom:0;height:calc(52px + env(safe-area-inset-bottom,0px));padding-bottom:env(safe-area-inset-bottom,0px);
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));
+  display:flex;align-items:center;gap:12px;background:var(--paper);border-top:1px solid var(--line);z-index:20;font-size:13px}
+.bar.dark{background:var(--ink);border-color:#333;color:#CFC8C6}
+.bar.onred{background:var(--red-deep);border-color:var(--red-deep);color:#fff}
+.bar img{height:18px;width:auto}
+.bar .sec{font-family:var(--f-display);font-weight:800;font-stretch:110%;text-transform:uppercase;letter-spacing:.08em;font-size:11px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar .count{font-family:var(--f-mono);font-variant-numeric:tabular-nums;font-size:12px}
+.navbtn{border:1.5px solid currentColor;background:transparent;color:inherit;border-radius:6px;height:32px;min-width:34px;padding:0 .6em;cursor:pointer;font-family:var(--f-display);font-weight:800;font-size:12px;letter-spacing:.05em}
+.progress{position:fixed;left:0;bottom:calc(52px + env(safe-area-inset-bottom,0px));height:4px;background:var(--red);z-index:21;transition:width .25s ease}
+.py-status{font-family:var(--f-mono);font-size:11px;display:inline-flex;align-items:center;gap:.4em;white-space:nowrap}
+.py-status i{width:8px;height:8px;border-radius:50%;background:#C9A227;display:inline-block}
+.py-status.ready i{background:var(--ok)}
+.py-status.fail i{background:var(--red)}
+@media (max-width:620px){.bar .sec,.py-status span{display:none}}
+
+/* Index overlay */
+.index{position:fixed;inset:0;background:rgba(29,29,27,.96);z-index:40;color:#fff;overflow:auto;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:calc(28px + env(safe-area-inset-top,0px)) 40px}
+.index-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:22px}
+.index h3{color:var(--red);font-size:15px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.4em}
+.index ol{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:2px}
+.index button{all:unset;cursor:pointer;display:flex;gap:.7em;padding:.3em .5em;border-radius:5px;font-size:14px;width:100%;box-sizing:border-box}
+.index button:hover,.index button:focus-visible{background:#333}
+.index button span{font-family:var(--f-mono);color:#8E8784;min-width:2ch;font-variant-numeric:tabular-nums}
+.index .close-row{max-width:1200px;margin:0 auto 18px;display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:13px;color:#aaa}
+</style>
+
+<div class="deck" id="deck">
+
+<!-- ============ PORTADA ============ -->
+<section class="slide cover" data-section="Sprint 01" data-title="Portada">
+  <div class="inner center">
+    <img class="cover-logo" src="data:image/png;base64,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" alt="The Bridge">
+    <div class="eyebrow">AI Engineering · Python &amp; IA Generativa</div>
+    <h1>Sprint 01<br>Programación Básica I</h1>
+    <p class="lead">Markdown, primeros pasos en Python y flujos de control, programando las piezas de una app de música.</p>
+    <div class="meta-row"><span>Sesión de teoría · jueves</span><span>90 min + Kahoot</span><span>3 bloques</span></div>
+  </div>
+</section>
+
+<section class="slide" data-section="Sprint 01" data-title="Cómo funciona este sprint">
+  <div class="inner">
+    <div class="eyebrow">Cómo funciona este sprint</div>
+    <h2>Teoría el jueves, práctica el martes y el miércoles</h2>
+    <div class="grid3">
+      <div class="tile ink"><div class="k">JUE</div><h3>Teoría (hoy)</h3><p>Los conceptos clave de los 3 bloques, con código que ejecutamos en directo. Cerramos con un Kahoot.</p></div>
+      <div class="tile"><div class="k">MAR</div><h3>Live review I</h3><p>Abrimos con otro Kahoot y resolvemos juntos los ejercicios de la carpeta <code>Practica_live_review</code>.</p></div>
+      <div class="tile"><div class="k">MIÉ</div><h3>Live review II</h3><p>Seguimos con los ejercicios de <code>Practica_live_review</code>.</p></div>
+    </div>
+    <div class="cols even">
+      <div class="stack">
+        <h3>Dónde está cada cosa</h3>
+        <div class="tbl-wrap"><table>
+          <tr><th>Carpeta</th><th>Para qué</th></tr>
+          <tr><td><code>01_Teoria/</code></td><td>Guía de Markdown y notebooks de teoría</td></tr>
+          <tr><td><code>02_Workout/</code></td><td>Ejercicios guiados</td></tr>
+          <tr><td><code>Practica_live_review/</code></td><td>Ejercicios de la live review</td></tr>
+        </table></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-section="Sprint 01" data-title="Agenda de hoy">
+  <div class="inner">
+    <div class="eyebrow">Hoy en 90 minutos</div>
+    <h2>Tres bloques y un hilo conductor: los datos de una app de música</h2>
+    <div class="grid4">
+      <div class="tile"><div class="k">01</div><h3>Markdown</h3><p>Documentar notebooks, READMEs y prompts.</p><p><strong>~15 min</strong></p></div>
+      <div class="tile"><div class="k">02</div><h3>Python I</h3><p>Variables, tipos, operaciones, funciones, métodos y listas.</p><p><strong>~40 min</strong></p></div>
+      <div class="tile"><div class="k">03</div><h3>Flujos de control</h3><p><code>if</code>, <code>for</code>, <code>while</code>, <code>break</code>/<code>continue</code> y <code>try</code>/<code>except</code>.</p><p><strong>~30 min</strong></p></div>
+      <div class="tile ink"><div class="k">K!</div><h3>Kahoot</h3><p>Repasamos lo de hoy jugando.</p><p><strong>últimos 30 min</strong></p></div>
+    </div>
+    <div class="cols even">
+    </div>
+  </div>
+</section>
+
+<!-- ============ BLOQUE 01 · MARKDOWN ============ -->
+<section class="slide divider" data-section="01 · Markdown" data-title="Bloque 01 · Markdown">
+  <div class="inner center">
+    <div class="num">01</div>
+    <h1>Markdown</h1>
+    <p class="lead">El formato con el que vas a documentar tu código y a escribir instrucciones a la IA.</p>
+    <div class="chips"><span>01_Teoria/01_Introduccion_Herramientas</span><span>intro_markdown.md</span></div>
+  </div>
+</section>
+
+<section class="slide" data-section="01 · Markdown" data-title="¿Qué es Markdown?">
+  <div class="inner">
+    <div class="eyebrow">01 · Markdown</div>
+    <h2>Texto plano con unas pocas convenciones</h2>
+    <div class="cols">
+      <div class="stack">
+        <p class="lead">Un lenguaje de marcado <strong>ligero</strong>: escribes texto normal con símbolos como <code>#</code>, <code>*</code> o <code>`</code>, y la herramienta lo convierte en títulos, listas, enlaces o código resaltado.</p>
+        <ul class="clean">
+          <li><strong>Simple y legible en crudo</strong>: se entiende incluso sin renderizar.</li>
+          <li><strong>Versionable con Git</strong>, a diferencia de un documento de Word.</li>
+          <li>El estándar de facto es <strong>GFM</strong> (GitHub Flavored Markdown).</li>
+        </ul>
+        <div class="note"><b>¿Por qué en IA?</b>Los modelos de IA entienden muy bien Markdown. Usarlo en tus prompts te ayuda a dar instrucciones más precisas y estructuradas.</div>
+      </div>
+      <div class="stack">
+        <h3>El mismo texto, en crudo y renderizado</h3>
+        <pre class="anat spec-raw">## Playlist del lunes
+- **Neón**: 3:30
+- *Marea*: 3:05
+- [ ] Añadir más temas</pre>
+        <div class="tile"><h3 style="font-size:1.25em">Playlist del lunes</h3><p style="color:var(--ink)">• <strong>Neón</strong>: 3:30<br>• <em>Marea</em>: 3:05<br>☐ Añadir más temas</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-section="01 · Markdown" data-title="Markdown en Jupyter y Colab">
+  <div class="inner">
+    <div class="eyebrow">01 · Markdown</div>
+    <h2>Una celda de Markdown en 4 pasos</h2>
+    <div class="grid4">
+      <div class="tile"><div class="k">1</div><h3>Crear</h3><p>Añade una celda y cámbiala a tipo <strong>Markdown</strong>.</p></div>
+      <div class="tile"><div class="k">2</div><h3>Escribir</h3><p>Usa la sintaxis: <code>#</code>, <code>**</code>, <code>-</code>…</p></div>
+      <div class="tile"><div class="k">3</div><h3>Ejecutar</h3><p><kbd>Ctrl</kbd> + <kbd>Enter</kbd> o el botón de play: ves el texto renderizado.</p></div>
+      <div class="tile"><div class="k">4</div><h3>Editar</h3><p><strong>Doble clic</strong> sobre el texto para volver al modo edición.</p></div>
+    </div>
+    <div class="cols even">
+      <div class="stack">
+        <h3>¿Dónde lo vas a usar?</h3>
+        <ul class="clean">
+          <li>Celdas de Jupyter y Colab: enunciado, contexto y conclusiones junto al código.</li>
+          <li>README y documentación en GitHub.</li>
+          <li>Issues, pull requests, foros… y prompts.</li>
+        </ul>
+      </div>
+      <div class="stack">
+        <div class="note"><p>Las celdas de <strong>código</strong> siguen siendo código. Markdown también acepta <strong>HTML</strong> dentro de la celda.</p>
+</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-section="01 · Markdown" data-title="Chuleta de sintaxis">
+  <div class="inner">
+    <div class="eyebrow">01 · Markdown</div>
+    <h2>Chuleta de sintaxis</h2>
+    <div class="cols even">
+      <div class="tbl-wrap"><table>
+        <tr><th>Quiero…</th><th>Escribo</th></tr>
+        <tr><td>Títulos</td><td><code># Título</code> · <code>## Sección</code> · <code>### Sub</code></td></tr>
+        <tr><td>Cursiva / negrita / ambas</td><td><code>*texto*</code> · <code>**texto**</code> · <code>***texto***</code></td></tr>
+        <tr><td>Tachado (GFM)</td><td><code>~~texto~~</code></td></tr>
+        <tr><td>Lista</td><td><code>- ítem</code> · <code>1. paso</code> (sublista: 2 espacios)</td></tr>
+        <tr><td>Lista de tareas (GFM)</td><td><code>- [x] hecho</code> · <code>- [ ] pendiente</code></td></tr>
+        <tr><td>Enlace</td><td><code>[texto](https://url)</code></td></tr>
+        <tr><td>Imagen</td><td><code>![alt](ruta/imagen.png)</code></td></tr>
+      </table></div>
+      <div class="tbl-wrap"><table>
+        <tr><th>Quiero…</th><th>Escribo</th></tr>
+        <tr><td>Código en línea</td><td><code>`print()`</code></td></tr>
+        <tr><td>Bloque de código</td><td><code>```python</code> … <code>```</code></td></tr>
+        <tr><td>Cita</td><td><code>&gt; texto citado</code></td></tr>
+        <tr><td>Separador</td><td><code>---</code></td></tr>
+        <tr><td>Tabla</td><td><code>| A | B |</code> + <code>|---|---|</code></td></tr>
+        <tr><td>Alinear columnas</td><td><code>:---</code> · <code>:---:</code> · <code>---:</code></td></tr>
+        <tr><td>Salto de línea</td><td>dos espacios al final de la línea</td></tr>
+        <tr><td>Símbolo literal</td><td><code>\*no es cursiva\*</code></td></tr>
+      </table></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-section="01 · Markdown" data-title="Playground de Markdown">
+  <div class="inner">
+    <div class="eyebrow">01 · Markdown · en vivo</div>
+    <h2>Escribe a la izquierda y mira el resultado a la derecha</h2>
+    <div class="md-play">
+      <div class="md-col src"><div class="md-label">Markdown (editable)</div>
+<textarea id="md-src" spellcheck="false" aria-label="Markdown editable">
+# Sonora · notas del proyecto
+
+App de música **de juguete** para practicar *Python*.
+
+## Datos que vamos a usar
+1. Canciones (título, duración en segundos)
+2. Playlists
+   - favoritas
+   - para correr
+
+## Checklist
+- [x] Crear el repositorio
+- [ ] Documentar el `README`
+
+> Primero se documenta, luego se programa.
+
+| Canción | Segundos | BPM |
+|---------|---------:|:---:|
+| Neón    |      210 | 128 |
+| Marea   |      185 |  92 |
+
+~~Versión 0.1~~ → versión 0.2
+
+## **Cantantes favoritos**
+Mi cantante favorito es Alejandro Sanz, pero poco después me comenzó a gustar Shakira.
+
+En cuanto a las canciones, ...
+</textarea>
+      </div>
+      <div class="md-col"><div class="md-label">Vista previa</div><div class="md-out" id="md-out"></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-section="01 · Markdown" data-title="Errores típicos en Markdown">
+  <div class="inner">
+    <div class="eyebrow">01 · Markdown</div>
+    <h2>Errores típicos y buenas prácticas</h2>
+    <div class="cols even">
+      <div class="tbl-wrap"><table>
+        <tr><th>Escribes</th><th>Problema</th></tr>
+        <tr><td><code>** negrita **</code></td><td>Con espacios junto a los asteriscos <strong>no</strong> se aplica la negrita.</td></tr>
+        <tr><td><code>#Título</code></td><td>Deja un espacio después de <code>#</code>.</td></tr>
+        <tr><td><code># …</code> y luego <code>### …</code></td><td>No te saltes niveles de título: rompe la jerarquía y la accesibilidad.</td></tr>
+        <tr><td>Dos líneas seguidas</td><td>Se juntan en un párrafo. Usa línea en blanco o dos espacios al final.</td></tr>
+        <tr><td><code>*</code> o <code>_</code> sueltos</td><td>Activan cursiva sin querer: escápalos con <code>\</code>.</td></tr>
+      </table></div>
+      <div class="stack">
+        <div class="note"><b>Ojo</b>El mismo Markdown puede verse distinto en Jupyter, VSCode y GitHub. Algunas extensiones de GFM, como las notas al pie, no siempre funcionan en Jupyter.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-section="01 · Markdown" data-title="Bonus: Markdown como especificación (SDD)">
+  <div class="inner">
+    <div class="eyebrow">01 · Markdown · un adelanto</div>
+    <h2>Markdown como especificación: la idea del <em>Spec-Driven Development</em></h2>
+    <div class="cols">
+      <div class="stack">
+        <p class="lead">Antes de pedirle código a la IA, se escribe en Markdown <strong>qué</strong> tiene que hacer el programa. Esa <em>spec</em> pasa a ser la referencia común para ti y para la IA.</p>
+        <ul class="clean">
+          <li>Todo es Markdown: títulos, listas, tablas y listas de tareas. Exactamente lo que acabamos de ver.</li>
+          <li>No es para todo: para un cambio pequeño, una spec larga sobra.</li>
+        </ul>
+        <div class="note"><b>Hoy, solo la idea</b>Esta spec la programamos en el bloque 03 con <code>if</code>/<code>elif</code>/<code>else</code>.</div>
+        <button class="btn run" type="button" id="btn-load-spec" style="align-self:flex-start">Abrir en el playground</button>
+      </div>
+      <pre class="anat spec-raw" id="spec-view"></pre>
+    </div>
+  </div>
+</section>
+<script type="text/plain" id="spec-md">
+# Spec: Etiquetar canciones por ritmo
+
+## Objetivo
+Dado el BPM (pulsaciones por minuto) de una canción,
+mostrar una etiqueta de ritmo.
+
+## Entrada
+- `bpm`: número entero
+
+## Reglas
+| BPM            | Etiqueta      |
+|----------------|---------------|
+| < 90           | Lenta         |
+| 90 a < 120     | Media         |
+| 120 a < 150    | Rápida        |
+| 150 a 300      | Muy rápida    |
+| < 0 o > 300    | BPM no válido |
+
+## Fuera de alcance
+- Detectar el BPM a partir del audio
+
+## Tareas
+- [ ] Guardar el BPM en una variable
+- [ ] Etiquetarlo con if / elif / else
+- [ ] Probar con 85, 90, 149, 150 y 400
+</script>
+
+<!-- ============ BLOQUE 02 · PYTHON I ============ -->
+<section class="slide divider" data-section="02 · Python I" data-title="Bloque 02 · Python I">
+  <div class="inner center">
+    <div class="num">02</div>
+    <h1>Python I</h1>
+    <p class="lead">Variables, tipos de datos, operaciones, funciones, métodos y listas.</p>
+    <div class="chips"><span>Basics_I.ipynb</span><span>Basics_II.ipynb</span></div>
+  </div>
+</section>
+
+<section class="slide" data-section="02 · Python I" data-title="Variables">
+  <div class="inner">
+    <div class="eyebrow">02 · Python I · variables</div>
+    <h2>Una variable es una etiqueta para un dato</h2>
+    <div class="cols">
+      <div class="stack">
+        <p class="lead"><code>=</code> es una <strong>asignación</strong>: guarda el valor de la derecha en el nombre de la izquierda.</p>
+        <ul class="clean">
+          <li>No hace falta declarar el tipo: Python lo deduce.</li>
+          <li>Se puede <strong>reasignar</strong> en cualquier momento.</li>
+          <li>El código se ejecuta <strong>de arriba abajo</strong>.</li>
+        </ul>
+        <span class="ask">Antes de ejecutar</span>
+        <p>Añadimos canciones a la playlist <em>después</em> de calcular la duración. ¿Se actualiza <code>duracion_total</code>?</p>
+      </div>
+      <div class="runner" data-file="playlist.py">
+<textarea>
+segundos_por_cancion = 210
+canciones = 12
+duracion_total = segundos_por_cancion * canciones
+print(duracion_total)
+
+canciones = 15          # añadimos 3 canciones
+print(canciones)
+print(duracion_total)   # ¿2520 o 3150?
+</textarea>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-section="02 · Python I" data-title="Nombres de variables">
+  <div class="inner">
+    <div class="eyebrow">02 · Python I · variables</div>
+    <h2>Cómo (no) nombrar una variable</h2>
+    <div class="cols">
+      <div class="stack">
+        <ul class="clean">
+          <li><strong>minúsculas_con_guion_bajo</strong> y nombres descriptivos, pero no larguísimos.</li>
+          <li><strong>Sin espacios</strong> y <strong>sin empezar por un número</strong>: <code>top_10</code> sí, <code>10_top</code> no.</li>
+          <li><strong>Distingue mayúsculas</strong>: <code>playlist</code> y <code>Playlist</code> son variables distintas.</li>
+          <li>No uses <strong>palabras reservadas</strong> (<code>class</code>, <code>for</code>, <code>if</code>…).</li>
+          <li>Evita ñ y tildes en los nombres.</li>
+          <li>Las constantes van en MAYÚSCULAS: <code>MAX_CANCIONES = 500</code>.</li>
+        </ul>
+      </div>
+      <div class="runner" data-file="nombres.py">
+<textarea>
+top_10 = "Éxitos del mes"
+Top_10 = "Otra lista"          # ¡es OTRA variable!
+print(top_10, "|", Top_10)
+
+# Quita el # de una línea y ejecuta para ver el error:
+# 10_top = "lista"
+# mi playlist = "lista"
+# class = "rock"
+
+import keyword
+print(len(keyword.kwlist), "palabras reservadas")
+</textarea>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-section="02 · Python I" data-title="print() y f-strings">
+  <div class="inner">
+    <div class="eyebrow">02 · Python I · print</div>
+    <h2>Cuatro formas de mostrar un mensaje</h2>
+    <div class="cols">
+      <div class="stack">
+        <div class="tbl-wrap"><table>
+          <tr><th>Forma</th><th>Detalle</th></tr>
+          <tr><td>Comas</td><td>Añade un espacio entre los valores y acepta cualquier tipo.</td></tr>
+          <tr><td><code>+</code></td><td>Solo une <strong>textos</strong>: los números hay que pasarlos con <code>str()</code>.</td></tr>
+          <tr><td><code>%s</code></td><td>Formato clásico: lo verás en código antiguo.</td></tr>
+          <tr><td><strong>f-string</strong></td><td><code>f"...{variable}..."</code>: la más legible. Es la recomendada.</td></tr>
+        </table></div>
+        <div class="note"><b>Comentarios</b><code># una línea</code> o <code>"""varias líneas"""</code>. Python los ignora. Comenta siempre: nunca sabes quién heredará tu código.</div>
+      </div>
+      <div class="runner" data-file="print.py">
+<textarea>
+titulo = "Neón"
+reproducciones = 1500
+
+print("La canción", titulo, "tiene", reproducciones, "reproducciones")
+print("La canción " + titulo + " tiene " + str(reproducciones) + " reproducciones")
+print("La canción %s tiene %s reproducciones" % (titulo, reproducciones))
+print(f"La canción {titulo} tiene {reproducciones} reproducciones")
+
+# ¿Y si quitamos el str()?
+# print("Tiene " + reproducciones + " reproducciones")
+</textarea>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-section="02 · Python I" data-title="Leer un error">
+  <div class="inner">
+    <div class="eyebrow">02 · Python I · errores</div>
+    <h2>Un error es una pista, no un fracaso</h2>
+    <div class="cols">
+      <div class="stack">
+        <div class="anat">minutos_semana = minutos_lunes + minutos_martes<br><span class="hl3">línea 1</span> → <span class="hl1">NameError</span>: <span class="hl2">name 'minutos_lunes' is not defined</span></div>
+        <div class="legend"><span><i style="background:var(--red)"></i>Tipo de error</span><span><i style="background:var(--tk-str)"></i>Descripción</span><span><i style="background:var(--tk-num)"></i>Dónde ocurre</span></div>
+        <p>Python ejecuta <strong>de arriba abajo</strong>: no puedes usar una variable antes de crearla.</p>
+        <div class="tbl-wrap"><table>
+          <tr><th>Error</th><th>Cuándo lo verás hoy</th></tr>
+          <tr><td><code>NameError</code></td><td>Variable sin crear o mal escrita</td></tr>
+          <tr><td><code>SyntaxError</code></td><td>Comillas sin cerrar, espacios en el nombre…</td></tr>
+          <tr><td><code>TypeError</code></td><td><code>"10" + 5</code>: tipos que no se pueden combinar</td></tr>
+          <tr><td><code>ValueError</code></td><td><code>int("4.5")</code>: conversión imposible</td></tr>
+          <tr><td><code>IndexError</code> · <code>ZeroDivisionError</code></td><td>Posición que no existe · dividir entre 0</td></tr>
+        </table></div>
+      </div>
+      <div class="runner" data-file="errores.py">
+<textarea>
+minutos_semana = minutos_lunes + minutos_martes
+
+minutos_lunes = 45
+minutos_martes = 30
+# Arréglalo: ¿qué línea hay que mover?
+# Y después provoca un error nuevo: escribe mal "minutos_lunes"
+</textarea>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-section="02 · Python I" data-title="Tipos de datos">
+  <div class="inner">
+    <div class="eyebrow">02 · Python I · tipos</div>
+    <h2>Los tipos básicos, con datos de una canción</h2>
+    <div class="grid4">
+      <div class="tile"><div class="k">int</div><p>Entero: <code>210</code> segundos</p></div>
+      <div class="tile"><div class="k">float</div><p>Real, <strong>con punto</strong>: <code>4.7</code> de valoración</p></div>
+      <div class="tile"><div class="k">str</div><p>Texto entre comillas: <code>"Neón"</code></p></div>
+      <div class="tile"><div class="k">bool</div><p><code>True</code> / <code>False</code>, con mayúscula</p></div>
+    </div>
+    <div class="cols">
+      <div class="stack">
+        <p>Python es <strong>dinámico</strong> (no declaras el tipo) y <strong>fuertemente tipado</strong> (cada valor tiene su tipo y no se mezclan solos).</p>
+        <p><code>None</code> es el valor nulo: no es <code>0</code>, ni <code>""</code>, ni <code>False</code>. Por ejemplo, una canción sin letra disponible.</p>
+        <span class="ask">Pregunta al grupo</span>
+        <p>¿De qué tipo es <code>"210"</code>? ¿Y <code>8 / 4</code>?</p>
+      </div>
+      <div class="runner" data-file="tipos.py">
+<textarea>
+duracion = 210
+valoracion = 4.7
+titulo = "Neón"
+es_favorita = True
+letra = None
+
+print(type(duracion), type(valoracion), type(titulo))
+print(type(es_favorita), type(letra))
+print(type("210"), type(8 / 4))
+</textarea>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-section="02 · Python I" data-title="Strings">
+  <div class="inner">
+    <div class="eyebrow">02 · Python I · strings</div>
+    <h2>Trabajar con texto</h2>
+    <div class="cols">
+      <div class="stack">
+        <ul class="clean">
+          <li>Comillas simples o dobles. Si el texto lleva comillas, usa las otras o escápalas: <code>\"</code></li>
+          <li>Caracteres de escape: <code>\n</code> salto de línea, <code>\t</code> tabulación.</li>
+          <li><code>+</code> concatena textos y <code>*</code> repite un texto.</li>
+          <li><code>len()</code> devuelve el número de caracteres (los espacios cuentan).</li>
+        </ul>
+        <span class="ask">Pregunta al grupo</span>
+        <p>¿Qué imprime <code>"12" * 2</code>? ¿Y <code>int("12") * 2</code>?</p>
+      </div>
+      <div class="runner" data-file="strings.py">
+<textarea>
+artista = "Luna Vértice"
+titulo = "Neón"
+ficha = titulo + " - " + artista
+print(ficha, len(ficha))
+
+print('Versión "acústica" incluida')
+print("Lista:\n\t1. Neón\n\t2. Marea")
+print("ja" * 3)
+print("=" * 30)
+
+print("12" * 2)
+print(int("12") * 2)
+</textarea>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-section="02 · Python I" data-title="Conversión de tipos">
+  <div class="inner">
+    <div class="eyebrow">02 · Python I · conversión</div>
+    <h2>Convertir tipos: <code>int()</code>, <code>float()</code>, <code>str()</code>, <code>bool()</code></h2>
+    <div class="cols">
+      <div class="stack">
+        <ul class="clean">
+          <li><code>int(4.7)</code> <strong>trunca</strong> (no redondea). Para redondear, <code>round()</code>.</li>
+          <li>Decimales con <strong>punto, nunca con coma</strong>. Si llegan con coma, primero <code>.replace(",", ".")</code>.</li>
+          <li><code>int("4.5")</code> falla: primero <code>float()</code> y después <code>int()</code>.</li>
+          <li><code>bool()</code>: <code>0</code> y <code>""</code> son <code>False</code>; todo lo demás es <code>True</code>… incluido <code>"0"</code>.</li>
+        </ul>
+        <div class="note"><b>Caso real</b>El precio de la suscripción llega de una web europea como <code>"9,99"</code>. Si no lo conviertes bien, no puedes operar con él.</div>
+      </div>
+      <div class="runner" data-file="conversion.py">
+<textarea>
+valoracion = 4.666
+print(int(valoracion), round(valoracion), round(valoracion, 1))
+
+precio = "9,99"
+precio_num = float(precio.replace(",", "."))
+print(precio_num * 12, "al año")
+
+print(float("4.5"), int(float("4.5")))
+print(bool(0), bool(""), bool("0"), bool(-3))
+print(str(210) + " segundos")
+
+# Descomenta para ver los errores:
+# int("4.5")
+# float("9,99")
+</textarea>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-section="02 · Python I" data-title="Quiz: ¿qué devuelve?">
+  <div class="inner">
+    <div class="eyebrow">02 · Python I · quiz rápido</div>
+    <h2>¿Qué devuelve cada línea?</h2>
+    <div class="cols">
+      <div class="stack">
+        <span class="ask">Votad antes de ejecutar</span>
+        <div class="tbl-wrap"><table>
+          <tr><th>#</th><th>Expresión</th></tr>
+          <tr><td>a</td><td><code>int(9.99)</code></td></tr>
+          <tr><td>b</td><td><code>bool("0")</code></td></tr>
+          <tr><td>c</td><td><code>"ab" * 2</code></td></tr>
+          <tr><td>d</td><td><code>float("2") + 1</code></td></tr>
+          <tr><td>e</td><td><code>type(9 // 2)</code></td></tr>
+          <tr><td>f</td><td><code>"10" + 5</code></td></tr>
+        </table></div>
+      </div>
+      <div class="runner" data-file="quiz_tipos.py">
+<textarea>
+print("a:", int(9.99))
+print("b:", bool("0"))
+print("c:", "ab" * 2)
+print("d:", float("2") + 1)
+print("e:", type(9 // 2))
+print("f:", "10" + 5)
+</textarea>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-section="02 · Python I" data-title="input()">
+  <div class="inner">
+    <div class="eyebrow">02 · Python I · input</div>
+    <h2><code>input()</code> siempre devuelve un <code>str</code></h2>
+    <div class="cols">
+      <div class="stack">
+        <p class="lead">Un programa recibe una entrada, opera con ella y devuelve una salida. <code>input()</code> recoge lo que escribe el usuario, <strong>siempre como texto</strong>.</p>
+        <ul class="clean">
+          <li>Para operar con números: <code>int(input())</code> o <code>float(input())</code>.</li>
+          <li>Aquí, las respuestas se escriben en la caja <em>Entrada</em>, una línea por cada <code>input()</code>.</li>
+        </ul>
+        <div class="note"><b>En Jupyter</b>Si ejecutas otra vez una celda que está esperando un <code>input()</code>, puede quedarse colgada. Usa el botón de stop o reinicia el kernel.</div>
+      </div>
+      <div class="runner" data-file="perfil.py" data-stdin="Marta&#10;40">
+<textarea>
+usuario = input("Nombre de usuario: ")
+minutos = input("¿Cuántos minutos has escuchado hoy? ")
+print(type(minutos))
+
+print(f"Hola, {usuario}.")
+print(f"A este ritmo, en una semana serán {int(minutos) * 7} minutos")
+
+# ¿Y sin int()?
+# print(minutos * 7)
+</textarea>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-section="02 · Python I" data-title="Operaciones aritméticas">
+  <div class="inner">
+    <div class="eyebrow">02 · Python I · operaciones</div>
+    <h2>Operaciones aritméticas: convertir segundos en mm:ss</h2>
+    <div class="cols">
+      <div class="stack">
+        <div class="tbl-wrap"><table>
+          <tr><th>Operador</th><th>Qué hace</th><th>Ejemplo</th></tr>
+          <tr><td><code>+ - *</code></td><td>Suma, resta, multiplicación</td><td><code>210 * 12</code></td></tr>
+          <tr><td><code>/</code></td><td>División (siempre <code>float</code>)</td><td><code>754 / 60</code></td></tr>
+          <tr><td><code>//</code></td><td>Cociente entero</td><td><code>754 // 60</code></td></tr>
+          <tr><td><code>%</code></td><td>Resto de la división</td><td><code>754 % 60</code></td></tr>
+          <tr><td><code>**</code></td><td>Potencia</td><td><code>2 ** 10</code></td></tr>
+        </table></div>
+        <p>Se respeta el orden matemático: usa <strong>paréntesis</strong> en caso de duda. Para operaciones más complejas: <code>import math</code>.</p>
+        <span class="ask">Reto</span>
+        <p>Cambia <code>total</code> por 3600. ¿Qué sale? ¿Y con 59?</p>
+      </div>
+      <div class="runner" data-file="duracion.py">
+<textarea>
+total = 754               # segundos de una playlist
+
+print(total / 60)         # minutos con decimales
+minutos = total // 60     # minutos completos
+segundos = total % 60     # lo que sobra
+print(f"{minutos} min {segundos} s")
+
+print(2 ** 10, (2 + 3) * 4, 2 + 3 * 4)
+
+import math
+print(math.sqrt(144))
+
+# print(total / 0)        # ZeroDivisionError
+</textarea>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-section="02 · Python I" data-title="Comparaciones">
+  <div class="inner">
+    <div class="eyebrow">02 · Python I · comparaciones</div>
+    <h2><code>=</code> asigna, <code>==</code> compara</h2>
+    <div class="cols">
+      <div class="stack">
+        <p class="lead">Una comparación siempre devuelve un <code>bool</code>.</p>
+        <p><code>==</code> &nbsp; <code>!=</code> &nbsp; <code>&gt;</code> &nbsp; <code>&lt;</code> &nbsp; <code>&gt;=</code> &nbsp; <code>&lt;=</code></p>
+        <ul class="clean">
+          <li>Comparar con <code>==</code> tipos distintos no da error: simplemente devuelve <code>False</code>. Ojo, porque estás comparando peras con manzanas.</li>
+          <li>Con <code>&gt;</code> o <code>&lt;</code> entre número y texto sí salta un <code>TypeError</code>.</li>
+        </ul>
+        <span class="ask">Votad antes de ejecutar</span>
+        <p><code>"Rock" == "rock"</code> &nbsp;·&nbsp; <code>128 == "128"</code> &nbsp;·&nbsp; <code>"Zeta" &lt; "abeja"</code></p>
+      </div>
+      <div class="runner" data-file="comparaciones.py">
+<textarea>
+bpm = 128
+print(bpm == 128, bpm != 128, bpm >= 120)
+print("Rock" == "rock")
+print(128 == "128")
+print(3 == 3.0, False == 0)
+print("Zeta" < "abeja")
+
+# print(bpm > "100")      # TypeError
+</textarea>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-section="02 · Python I" data-title="and / or / not">
+  <div class="inner">
+    <div class="eyebrow">02 · Python I · booleanos</div>
+    <h2><code>and</code>, <code>or</code>, <code>not</code>: ¿entra en mi playlist para correr?</h2>
+    <div class="cols">
+      <div class="stack">
+        <div class="grid3">
+          <div class="tile"><div class="k">and</div><p>Se tienen que cumplir <strong>todas</strong> las condiciones.</p></div>
+          <div class="tile"><div class="k">or</div><p>Basta con que se cumpla <strong>al menos una</strong>.</p></div>
+          <div class="tile"><div class="k">not</div><p>Lo <strong>contrario</strong> de lo que haya.</p></div>
+        </div>
+        <p><strong>Requisitos:</strong> BPM entre 140 y 180 · género pop <em>o</em> electrónica · <em>no</em> explícita · máximo 5 minutos.</p>
+        <span class="ask">Reto</span>
+        <p>Prueba con <code>bpm = 120</code> y luego con <code>explicita = True</code>. ¿Qué condición falla en cada caso?</p>
+      </div>
+      <div class="runner" data-file="correr.py">
+<textarea>
+bpm, genero, explicita, duracion = 150, "electrónica", False, 245
+
+cond_ritmo = bpm >= 140 and bpm <= 180
+cond_genero = genero == "pop" or genero == "electrónica"
+cond_letra = not explicita
+cond_duracion = duracion <= 300
+
+print(cond_ritmo, cond_genero, cond_letra, cond_duracion)
+print("¿Entra?", cond_ritmo and cond_genero and cond_letra and cond_duracion)
+</textarea>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-section="02 · Python I" data-title="Funciones built-in y métodos">
+  <div class="inner">
+    <div class="eyebrow">02 · Python I · funciones y métodos</div>
+    <h2>Funciones <em>built-in</em> y métodos</h2>
+    <div class="cols">
+      <div class="stack">
+        <div class="tile"><h3><code>funcion(argumentos)</code></h3><p>Vienen con Python: <code>print</code>, <code>type</code>, <code>len</code>, <code>max</code>, <code>min</code>, <code>round</code>, <code>range</code>, <code>int</code>, <code>str</code>…</p></div>
+        <div class="tile"><h3><code>objeto.metodo(argumentos)</code></h3><p>Son propios de cada tipo de objeto: un <code>str</code> tiene unos métodos y una lista tiene otros. <strong>Los paréntesis van siempre</strong>, aunque estén vacíos.</p></div>
+        <span class="ask">Pregunta al grupo</span>
+        <p>Después de <code>estribillo.upper()</code>, ¿la variable <code>estribillo</code> queda en mayúsculas?</p>
+      </div>
+      <div class="runner" data-file="metodos.py">
+<textarea>
+duraciones = [210, 185, 340, 95]
+print(len(duraciones), max(duraciones), min(duraciones))
+
+estribillo = "baila baila bajo la luz de neón"
+print(estribillo.upper())
+print(estribillo.count("baila"))
+print(estribillo.replace("neón", "la luna"))
+print(estribillo.split(" "))
+print(estribillo.index("luz"))
+print(estribillo)          # ¿ha cambiado?
+</textarea>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-section="02 · Python I" data-title="Listas: crear y acceder">
+  <div class="inner">
+    <div class="eyebrow">02 · Python I · listas</div>
+    <h2>Listas: colecciones ordenadas y mutables</h2>
+    <div class="cols">
+      <div class="stack">
+        <ul class="clean">
+          <li>Elementos entre <code>[ ]</code> separados por comas. Pueden ser de <strong>tipos distintos</strong>, incluso otras listas.</li>
+          <li><strong>Ordenadas</strong>: accedes por posición, y <strong>la primera es la 0</strong>.</li>
+          <li><strong>Mutables</strong>: puedes cambiar sus elementos después de crearla.</li>
+          <li>Los textos también se indexan: <code>"Neón"[0]</code>.</li>
+        </ul>
+        <span class="ask">Pregunta al grupo</span>
+        <p>¿Qué devuelve <code>cancion[3][1]</code>? ¿Y <code>cancion[0][0]</code>?</p>
+      </div>
+      <div class="runner" data-file="listas.py">
+<textarea>
+cancion = ["Neón", 210, True, ["pop", "indie"]]
+
+print(len(cancion))
+print(cancion[0], cancion[1])
+print(cancion[3][1])
+print(cancion[0][0])
+
+playlist = ["Neón", "Marea", "Órbita"]
+playlist[0] = "Neón (remix)"     # mutable
+print(playlist)
+
+# print(playlist[3])             # IndexError
+</textarea>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-section="02 · Python I" data-title="Métodos de listas">
+  <div class="inner">
+    <div class="eyebrow">02 · Python I · listas</div>
+    <h2>Métodos de listas: la cola de reproducción</h2>
+    <div class="cols">
+      <div class="stack">
+        <div class="tbl-wrap"><table>
+          <tr><th>Método</th><th>Qué hace</th></tr>
+          <tr><td><code>.append(x)</code></td><td>Añade <code>x</code> al final</td></tr>
+          <tr><td><code>.index(x)</code></td><td>Posición de la primera aparición de <code>x</code></td></tr>
+          <tr><td><code>.count(x)</code></td><td>Cuántas veces aparece <code>x</code></td></tr>
+          <tr><td><code>.clear()</code></td><td>Vacía la lista</td></tr>
+          <tr><td><code>lista_a + lista_b</code></td><td>Concatena dos listas</td></tr>
+        </table></div>
+        <span class="ask">Pregunta trampa</span>
+        <p>Si hago <code>cola = cola.append("Órbita")</code>, ¿qué queda en <code>cola</code>?</p>
+      </div>
+      <div class="runner" data-file="cola.py">
+<textarea>
+cola = ["Marea", "Neón", "Marea"]
+
+resultado = cola.append("Órbita")
+print(resultado)
+print(cola)
+
+print(cola.index("Neón"), cola.count("Marea"))
+print(cola + ["Brisa"])
+
+cola.clear()
+cola
+</textarea>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BLOQUE 03 · FLUJOS ============ -->
+<section class="slide divider" data-section="03 · Flujos de control" data-title="Bloque 03 · Flujos de control">
+  <div class="inner center">
+    <div class="num">03</div>
+    <h1>Flujos de control</h1>
+    <p class="lead">Hacer que el programa decida, repita y no se rompa ante un error.</p>
+    <div class="chips"><span>Flujos.ipynb</span><span>if · for · while · break · continue · try</span></div>
+  </div>
+</section>
+
+<section class="slide" data-section="03 · Flujos de control" data-title="Indentación">
+  <div class="inner">
+    <div class="eyebrow">03 · Flujos · sintaxis</div>
+    <h2>Dos puntos e indentación: así se marcan los bloques</h2>
+    <div class="cols">
+      <div class="stack">
+        <p class="lead">Otros lenguajes usan llaves <code>{ }</code>. Python usa la <strong>indentación</strong>: 4 espacios (o un tabulador).</p>
+        <ul class="clean">
+          <li><code>if</code>, <code>for</code>, <code>while</code>, <code>try</code>, funciones y clases terminan en <strong><code>:</code></strong>.</li>
+          <li>Todo lo indentado debajo pertenece a ese bloque. Lo que vuelve a la izquierda queda fuera.</li>
+          <li>Un <code>if</code> dentro de un <code>for</code> lleva doble indentación.</li>
+        </ul>
+        <span class="ask">Arréglalo en directo</span>
+        <p>Este código falla. Arréglalo y después mueve el último <code>print</code> dentro del <code>for</code>: ¿qué cambia?</p>
+      </div>
+      <div class="runner" data-file="indentacion.py">
+<textarea>
+duraciones = [210, 185, 340, 95]
+
+for d in duraciones:
+if d > 300:
+print(d, "segundos: canción larga")
+print("Revisión terminada")
+</textarea>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-section="03 · Flujos de control" data-title="if / elif / else">
+  <div class="inner">
+    <div class="eyebrow">03 · Flujos · condicionales</div>
+    <h2><code>if</code> / <code>elif</code> / <code>else</code>: etiquetar por ritmo</h2>
+    <div class="cols">
+      <div class="stack">
+        <ul class="clean">
+          <li>Las condiciones se evalúan <strong>en orden</strong>.</li>
+          <li>Solo se ejecuta el <strong>primer</strong> bloque cuya condición es <code>True</code>; el resto se ignora.</li>
+          <li>Por eso basta con <code>bpm &lt; 120</code>: si llegamos ahí, ya sabemos que el BPM es mayor o igual que 90.</li>
+          <li><code>else</code> recoge todo lo demás. Es opcional.</li>
+        </ul>
+        <span class="ask">Ejercicio</span>
+        <p>Es la spec del bloque 01. ¿Qué pasa con <code>bpm = 400</code> o <code>-5</code>? Añade el caso <code>"BPM no válido"</code>.</p>
+      </div>
+      <div class="runner" data-file="ritmo.py" data-solution="bpm = 400
+
+if bpm &lt; 0 or bpm &gt; 300:
+    print(&quot;BPM no válido&quot;)
+elif bpm &lt; 90:
+    print(&quot;Lenta&quot;)
+elif bpm &lt; 120:
+    print(&quot;Media&quot;)
+elif bpm &lt; 150:
+    print(&quot;Rápida&quot;)
+else:
+    print(&quot;Muy rápida&quot;)">
+<textarea>
+bpm = 128
+
+if bpm < 90:
+    print("Lenta")
+elif bpm < 120:
+    print("Media")
+elif bpm < 150:
+    print("Rápida")
+else:
+    print("Muy rápida")
+</textarea>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-section="03 · Flujos de control" data-title="Bucle for">
+  <div class="inner">
+    <div class="eyebrow">03 · Flujos · bucles</div>
+    <h2>Bucle <code>for</code>: repetir para cada elemento</h2>
+    <div class="cols">
+      <div class="stack">
+        <p class="lead">Sin bucle tendríamos que escribir un <code>if</code> por cada canción. Con <code>for</code>, el mismo código sirve para 4 canciones o para 4000.</p>
+        <p><code>for variable in iterable:</code> En cada vuelta, <code>variable</code> toma el siguiente valor.</p>
+        <ul class="clean">
+          <li>Un <strong>iterable</strong> es una colección que se puede recorrer: listas, <code>str</code>, <code>range()</code>…</li>
+          <li>Truco habitual: un <strong>acumulador</strong> (<code>total = 0</code> antes del bucle y se suma dentro).</li>
+        </ul>
+      </div>
+      <div class="runner" data-file="for.py">
+<textarea>
+duraciones = [210, 185, 340, 95]
+total = 0
+
+for d in duraciones:
+    total = total + d
+    if d >= 180:
+        print(d, "s → canción completa")
+    else:
+        print(d, "s → interludio")
+
+print("Duración total:", total, "s")
+
+for letra in "PLAY":
+    print(letra, end=" ")
+</textarea>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-section="03 · Flujos de control" data-title="range() y len()">
+  <div class="inner">
+    <div class="eyebrow">03 · Flujos · bucles</div>
+    <h2><code>range(inicio, fin, paso)</code></h2>
+    <div class="cols">
+      <div class="stack">
+        <ul class="clean">
+          <li>Genera números desde <code>inicio</code> hasta <code>fin</code>, <strong>sin incluir el fin</strong>.</li>
+          <li><code>range(5)</code> empieza en 0. El paso puede ser negativo.</li>
+          <li><code>range(len(lista))</code> recorre las <strong>posiciones</strong> de una lista.</li>
+        </ul>
+        <div class="note"><b>Buena práctica</b>No escribas a mano el tamaño en el <code>range</code>: si la lista cambia, fallará (<code>IndexError</code>) o se dejará elementos sin recorrer. Usa <code>len()</code>.</div>
+        <span class="ask">Pregunta al grupo</span>
+        <p>¿Qué números da <code>range(3, 12, 4)</code>?</p>
+      </div>
+      <div class="runner" data-file="range.py">
+<textarea>
+print(list(range(5)))
+print(list(range(1, 11)))
+print(list(range(3, 12, 4)))
+print(list(range(10, 0, -3)))
+
+playlist = ["Neón", "Marea", "Órbita"]
+for i in range(len(playlist)):
+    print(f"#{i + 1}", playlist[i])
+
+# for i in range(5):            # ¿qué pasa?
+#     print(playlist[i])
+</textarea>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-section="03 · Flujos de control" data-title="enumerate() y bucles anidados">
+  <div class="inner">
+    <div class="eyebrow">03 · Flujos · bucles</div>
+    <h2><code>enumerate()</code> y bucles anidados</h2>
+    <div class="cols even">
+      <div class="stack">
+        <p><code>enumerate()</code> da a la vez la <strong>posición</strong> y el <strong>elemento</strong>.</p>
+        <div class="runner" data-file="enumerate.py">
+<textarea>
+ranking = ["Órbita", "Neón", "Marea"]
+print(list(enumerate(ranking)))
+
+for posicion, titulo in enumerate(ranking):
+    print(f"Puesto {posicion + 1}: {titulo}")
+</textarea>
+        </div>
+      </div>
+      <div class="stack">
+        <p>Un <code>for</code> dentro de otro: el de dentro da todas sus vueltas <strong>por cada vuelta</strong> del de fuera.</p>
+        <div class="runner" data-file="horario.py">
+<textarea>
+# Programación de la radio del finde
+for dia in ["Sábado", "Domingo"]:
+    for franja in ["mañana", "tarde", "noche"]:
+        print(dia, franja)
+        if dia == "Domingo" and franja == "noche":
+            print("   → lista relajante")
+</textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-section="03 · Flujos de control" data-title="Aplicar operaciones con for">
+  <div class="inner">
+    <div class="eyebrow">03 · Flujos · bucles</div>
+    <h2>Transformar una lista elemento a elemento</h2>
+    <div class="cols">
+      <div class="stack">
+        <p class="lead"><code>reproducciones * 2</code> no duplica cada número de la lista. Hay que recorrerla y construir una <strong>nueva</strong> con <code>.append()</code>.</p>
+        <p>Aquí: las canciones promocionadas duplican sus reproducciones y el resto se queda igual.</p>
+        <span class="ask">Pregunta al grupo</span>
+        <p>¿Por qué usamos <code>enumerate</code> y no <code>reproducciones.index(r)</code>? Pista: hay dos canciones con 120.</p>
+      </div>
+      <div class="runner" data-file="promocion.py">
+<textarea>
+reproducciones = [120, 95, 120, 300]
+promocionada = [True, False, False, True]
+nuevas = []
+
+for i, r in enumerate(reproducciones):
+    if promocionada[i]:
+        nuevas.append(r * 2)
+    else:
+        nuevas.append(r)
+
+print(nuevas)
+</textarea>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-section="03 · Flujos de control" data-title="Bucle while">
+  <div class="inner">
+    <div class="eyebrow">03 · Flujos · bucles</div>
+    <h2>Bucle <code>while</code>: repetir mientras se cumpla una condición</h2>
+    <div class="cols">
+      <div class="stack">
+        <div class="grid3">
+          <div class="tile"><div class="k">1</div><p>Declara la <strong>variable de ejecución</strong> fuera del bucle.</p></div>
+          <div class="tile"><div class="k">2</div><p>Define la <strong>condición</strong> que lo mantiene vivo.</p></div>
+          <div class="tile"><div class="k">3</div><p><strong>Actualiza</strong> la variable en cada vuelta.</p></div>
+        </div>
+        <div class="note"><b>Bucle infinito</b>Si olvidas el paso 3, nunca termina. En Jupyter o Colab: botón de stop (interrumpir el kernel).</div>
+        <span class="ask">Ejercicio</span>
+        <p>Una canción viral duplica sus reproducciones cada día, empezando con 1. ¿Cuántos días tarda en superar el <strong>millón</strong>? Apostad un número.</p>
+      </div>
+      <div class="runner" data-file="viral.py" data-solution="reproducciones = 1
+dias = 0
+
+while reproducciones &lt;= 1000000:
+    reproducciones = reproducciones * 2
+    dias = dias + 1
+
+print(dias, &quot;días →&quot;, reproducciones, &quot;reproducciones&quot;)">
+<textarea>
+cuenta = 3
+while cuenta > 0:
+    print(cuenta, "...")
+    cuenta = cuenta - 1      # cuenta -= 1
+print("¡Play!")
+
+# Canción viral: completa tú (o pulsa Solución)
+reproducciones = 1
+dias = 0
+</textarea>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-section="03 · Flujos de control" data-title="break, continue y pass">
+  <div class="inner">
+    <div class="eyebrow">03 · Flujos · bucles</div>
+    <h2><code>break</code>, <code>continue</code> y <code>pass</code></h2>
+    <div class="cols">
+      <div class="stack">
+        <div class="tile"><div class="k">break</div><p><strong>Sale</strong> del bucle. Por ejemplo, para cuando ya has encontrado lo que buscabas.</p></div>
+        <div class="tile"><div class="k">continue</div><p><strong>Salta</strong> al siguiente elemento sin ejecutar el resto del código de esa vuelta.</p></div>
+        <div class="tile"><div class="k">pass</div><p><strong>No hace nada</strong>. Sirve para ocupar un hueco donde Python exige código.</p></div>
+        <span class="ask">Predice</span>
+        <p>¿Qué números imprime cada bucle?</p>
+      </div>
+      <div class="runner" data-file="break_continue.py">
+<textarea>
+duraciones = [45, 210, 30, 340, 185]
+
+# break: parar en la primera canción de más de 5 min
+for d in duraciones:
+    if d > 300:
+        break
+    print(d, end=" ")
+print("← break")
+
+# continue: saltarse las intros de menos de 1 min
+for d in duraciones:
+    if d < 60:
+        continue
+    print(d, end=" ")
+print("← continue")
+
+for d in duraciones:
+    if d < 60:
+        pass          # aquí irá algo más adelante
+    print(d, end=" ")
+print("← pass")
+</textarea>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-section="03 · Flujos de control" data-title="try / except">
+  <div class="inner">
+    <div class="eyebrow">03 · Flujos · errores</div>
+    <h2><code>try</code> / <code>except</code>: que un dato malo no pare el programa</h2>
+    <div class="cols">
+      <div class="stack">
+        <ul class="clean">
+          <li><code>try</code>: el código que <strong>puede</strong> fallar.</li>
+          <li><code>except TipoDeError</code>: qué hacer si falla con <strong>ese</strong> error. Puedes encadenar varios.</li>
+          <li><code>except Exception as e</code>: captura cualquier error y guarda su mensaje en <code>e</code>.</li>
+          <li><code>finally</code>: se ejecuta <strong>siempre</strong>, haya error o no.</li>
+        </ul>
+        <span class="ask">Pregunta al grupo</span>
+        <p>Si añado la valoración <code>"4.5"</code> a la lista, ¿la cuenta como válida?</p>
+      </div>
+      <div class="runner" data-file="valoraciones.py">
+<textarea>
+valoraciones = ["5", "4", "cinco", "3", ""]
+validas = []
+total = 0
+
+for v in valoraciones:
+    try:
+        numero = int(v)
+        validas.append(numero)
+        total = total + numero
+    except ValueError:
+        print(f"Descarto '{v}': no es un número entero")
+
+print("Válidas:", validas)
+
+try:
+    print("Media:", total / len(validas))
+except ZeroDivisionError:
+    print("No hay valoraciones válidas")
+finally:
+    print("Informe terminado")
+</textarea>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-section="03 · Flujos de control" data-title="Juntándolo todo">
+  <div class="inner">
+    <div class="eyebrow">03 · Flujos · todo junto</div>
+    <h2>Juntándolo todo: crear una playlist desde el teclado</h2>
+    <div class="cols">
+      <div class="stack">
+        <p class="lead">Un ejemplo con <code>while</code>, <code>input()</code>, conversión de tipos, <code>try</code>/<code>except</code>, <code>if</code>, <code>continue</code>, <code>break</code> y listas.</p>
+        <ul class="clean">
+          <li>El usuario escribe duraciones en segundos, una por línea. Con <code>fin</code>, se termina.</li>
+          <li>Lo que no es un número se ignora, y las duraciones imposibles también.</li>
+        </ul>
+        <span class="ask">Prueba</span>
+        <p>Añade una línea <code>-20</code> antes de <code>fin</code>. Después pon 6 duraciones válidas: ¿cuántas guarda y por qué?</p>
+      </div>
+      <div class="runner" data-file="crear_playlist.py" data-stdin="210&#10;tres minutos&#10;185&#10;fin">
+<textarea>
+playlist = []
+total = 0
+while len(playlist) < 5:
+    entrada = input("Duración en segundos (o 'fin'): ")
+    if entrada == "fin":
+        break
+    try:
+        segundos = int(entrada)
+    except ValueError:
+        print("   No es un número, lo ignoro")
+        continue
+    if segundos <= 0:
+        print("   Duración imposible, la ignoro")
+        continue
+    playlist.append(segundos)
+    total = total + segundos
+
+print(f"{len(playlist)} canciones, {total // 60} min {total % 60} s")
+</textarea>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CIERRE ============ -->
+<section class="slide" data-section="Cierre" data-title="Resumen del sprint">
+  <div class="inner">
+    <div class="eyebrow">Resumen</div>
+    <h2>Lo que hemos visto hoy</h2>
+    <div class="grid3">
+      <div class="tile"><h3 class="red">Markdown</h3><p><code>#</code> títulos · <code>**negrita**</code> · <code>- listas</code> · <code>[enlace](url)</code> · <code>![img](ruta)</code> · <code>```código```</code> · <code>&gt; cita</code> · <code>| tablas |</code></p></div>
+      <div class="tile"><h3 class="red">Python I</h3><p>Variables y nombres · <code>print</code> y f-strings · <code>int</code> <code>float</code> <code>str</code> <code>bool</code> <code>None</code> · conversión · <code>input()</code> · <code>+ - * / // % **</code> · <code>== != &lt; &gt;</code> · <code>and or not</code> · funciones y métodos · listas</p></div>
+      <div class="tile"><h3 class="red">Flujos de control</h3><p>Indentación y <code>:</code> · <code>if/elif/else</code> · <code>match</code> · <code>for</code> + <code>range</code>/<code>enumerate</code> · <code>while</code> · <code>break</code>/<code>continue</code>/<code>pass</code> · <code>try/except/finally</code></p></div>
+    </div>
+      <div class="note"><b>Consejo</b>Con los bucles, coged papel y boli y seguid las primeras iteraciones a mano, vuelta a vuelta.</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide cover" data-section="Cierre" data-title="¡Kahoot!">
+  <div class="inner center">
+    <img class="cover-logo" src="data:image/png;base64,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" alt="The Bridge">
+    <div class="eyebrow">Repaso</div>
+    <h1>¡Kahoot!</h1>
+    <p class="lead">Abrid kahoot.it en el móvil y meted el PIN que aparece en pantalla.</p>
+    <div class="meta-row"><span>~30 min</span><span>Markdown · Python I · Flujos</span></div>
+  </div>
+</section>
+
+</div>
+
+
+<div class="progress" id="progress"></div>
+<nav class="bar" id="bar" aria-label="Navegación">
+  <img id="bar-logo" src="data:image/png;base64,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" alt="The Bridge">
+  <div class="sec" id="bar-sec">Sprint 01</div>
+  <span class="py-status" id="py-status" title="Estado del intérprete de Python"><i></i><span id="py-status-text">Cargando Python…</span></span>
+  <button class="navbtn" id="btn-index" title="Índice (I)">ÍNDICE</button>
+  <button class="navbtn" id="btn-prev" title="Anterior (←)" aria-label="Anterior">←</button>
+  <span class="count" id="count">1 / 1</span>
+  <button class="navbtn" id="btn-next" title="Siguiente (→)" aria-label="Siguiente">→</button>
+  <button class="navbtn" id="btn-fs" title="Pantalla completa (F)">⛶</button>
+</nav>
+
+<div class="index" id="index" hidden>
+  <div class="close-row"><span>Pulsa una slide para ir a ella · <kbd>Esc</kbd> para cerrar</span><button class="navbtn" id="btn-index-close">CERRAR</button></div>
+  <div class="index-inner" id="index-inner"></div>
+</div>
+
+<script type="text/python" id="pyrunner">
+from browser import window
+import sys
+import json
+
+class _Buf:
+    def __init__(self):
+        self.parts = []
+    def write(self, s):
+        self.parts.append(["out", str(s)])
+        return len(str(s))
+    def flush(self):
+        pass
+    def add(self, kind, s):
+        self.parts.append([kind, s])
+
+def _lineno(e):
+    if isinstance(e, SyntaxError):
+        return getattr(e, "lineno", None)
+    n = None
+    tb = e.__traceback__
+    while tb is not None:
+        try:
+            if tb.tb_frame.f_code.co_filename == "<celda>":
+                n = tb.tb_lineno
+        except Exception:
+            pass
+        tb = tb.tb_next
+    return n
+
+def run_code(src, stdin_text):
+    buf = _Buf()
+    lines = stdin_text.split("\n") if stdin_text else []
+    pos = [0]
+    def fake_input(prompt=""):
+        buf.write(str(prompt))
+        if pos[0] < len(lines):
+            val = lines[pos[0]]
+            pos[0] += 1
+        else:
+            buf.add("inp", "\n")
+            raise EOFError("no quedan líneas en la caja Entrada")
+        buf.add("inp", val + "\n")
+        return val
+    ns = {"__name__": "__main__", "input": fake_input}
+    src = src.replace("\t", "    ").rstrip()
+    body, last = src, None
+    src_lines = src.split("\n")
+    tail = src_lines[-1] if src_lines else ""
+    if tail and not tail[0].isspace() and not tail.lstrip().startswith("#"):
+        try:
+            compile(tail, "<celda>", "eval")
+            body = "\n".join(src_lines[:-1])
+            last = tail
+        except SyntaxError:
+            pass
+    old_out, old_err = sys.stdout, sys.stderr
+    sys.stdout = buf
+    sys.stderr = buf
+    try:
+        exec(compile(body, "<celda>", "exec"), ns)
+        if last is not None:
+            val = eval(compile("\n" * (len(src_lines) - 1) + last, "<celda>", "eval"), ns)
+            if val is not None:
+                buf.add("echo", repr(val) + "\n")
+    except BaseException as e:
+        n = _lineno(e)
+        name = type(e).__name__
+        msg = str(e.args[0]) if (isinstance(e, SyntaxError) and e.args) else str(e)
+        buf.add("err", json.dumps([name, msg, n]))
+    finally:
+        sys.stdout, sys.stderr = old_out, old_err
+    return json.dumps(buf.parts)
+
+window.pyRun = run_code
+window.pyReady()
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/marked@15.0.12/marked.min.js"></script>
+<script>
+(function(){
+  "use strict";
+  /* ---------- Python syntax highlight ---------- */
+  var KW = new Set("False None True and as assert break class continue def del elif else except finally for from global if import in is lambda match case nonlocal not or pass raise return try while with yield".split(" "));
+  var BI = new Set("print len type int float str bool list range enumerate input max min sum round abs help dict tuple set zip".split(" "));
+  function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+  var TOK = /(#[^\n]*)|([rRbBfF]{0,2}(?:"""[\s\S]*?(?:"""|$)|'''[\s\S]*?(?:'''|$)|"(?:\\.|[^"\\\n])*"?|'(?:\\.|[^'\\\n])*'?))|(\b\d+(?:\.\d+)?\b)|([A-Za-z_][A-Za-z0-9_]*)/g;
+  function highlight(src){
+    var out = "", last = 0, m;
+    TOK.lastIndex = 0;
+    while ((m = TOK.exec(src))){
+      if (m.index === TOK.lastIndex) {}
+      out += esc(src.slice(last, m.index));
+      var t = m[0], cls = null;
+      if (m[1]) cls = "tk-c";
+      else if (m[2]) cls = "tk-s";
+      else if (m[3]) cls = "tk-n";
+      else if (m[4]) { if (KW.has(t)) cls = "tk-k"; else if (BI.has(t)) cls = "tk-b"; }
+      out += cls ? '<span class="'+cls+'">'+esc(t)+'</span>' : esc(t);
+      last = m.index + t.length;
+      if (t.length === 0) TOK.lastIndex++;
+    }
+    return out + esc(src.slice(last)) + "\n";
+  }
+
+  /* ---------- Runners ---------- */
+  var pyReady = false;
+  var runners = [];
+  var statusEl = document.getElementById("py-status");
+  var statusText = document.getElementById("py-status-text");
+  function setStatus(state, text){ statusEl.className = "py-status " + state; statusText.textContent = text; }
+
+  function buildRunner(box){
+    var ta = box.querySelector("textarea");
+    var original = ta.value.replace(/^\n/, "").replace(/\s+$/, "");
+    ta.value = original;
+    ta.setAttribute("spellcheck","false");
+    ta.setAttribute("autocapitalize","off");
+    ta.setAttribute("autocomplete","off");
+    ta.setAttribute("aria-label","Código Python editable: " + (box.dataset.file || ""));
+    ta.id = "code-" + runners.length;
+
+    var bar = document.createElement("div"); bar.className = "runner-bar";
+    var file = document.createElement("span"); file.className = "file"; file.textContent = box.dataset.file || "celda.py";
+    var bReset = document.createElement("button"); bReset.className = "btn"; bReset.type="button"; bReset.textContent = "Reiniciar";
+    var bRun = document.createElement("button"); bRun.className = "btn run"; bRun.type="button"; bRun.textContent = "▶ Ejecutar"; bRun.disabled = !pyReady;
+    bar.appendChild(file);
+    var bSol = null;
+    if (box.dataset.solution){ bSol = document.createElement("button"); bSol.className="btn"; bSol.type="button"; bSol.textContent="Solución"; bar.appendChild(bSol); }
+    bar.appendChild(bReset); bar.appendChild(bRun);
+
+    var ed = document.createElement("div"); ed.className = "editor";
+    var pre = document.createElement("pre"); pre.setAttribute("aria-hidden","true");
+    box.insertBefore(bar, ta);
+    box.insertBefore(ed, ta);
+    ed.appendChild(pre); ed.appendChild(ta);
+
+    var stdinTa = null;
+    if (box.dataset.stdin !== undefined){
+      var sd = document.createElement("label"); sd.className = "stdin";
+      sd.textContent = "Entrada del usuario (una línea por cada input())";
+      stdinTa = document.createElement("textarea"); stdinTa.rows = 2; stdinTa.value = box.dataset.stdin; stdinTa.spellcheck = false;
+      stdinTa.id = "stdin-" + runners.length;
+      sd.appendChild(stdinTa); box.appendChild(sd);
+    }
+    var out = document.createElement("pre"); out.className = "out"; out.setAttribute("aria-live","polite");
+    box.appendChild(out);
+
+    function sync(){
+      pre.innerHTML = highlight(ta.value);
+      ta.style.height = "auto";
+      ta.style.height = (ta.scrollHeight + 2) + "px";
+      pre.scrollLeft = ta.scrollLeft;
+    }
+    ta.addEventListener("input", sync);
+    ta.addEventListener("scroll", function(){ pre.scrollLeft = ta.scrollLeft; pre.scrollTop = ta.scrollTop; });
+    ta.addEventListener("keydown", function(e){
+      if (e.key === "Tab"){ e.preventDefault(); var s = ta.selectionStart, en = ta.selectionEnd;
+        ta.value = ta.value.slice(0,s) + "    " + ta.value.slice(en); ta.selectionStart = ta.selectionEnd = s + 4; sync(); }
+      else if (e.key === "Enter" && (e.ctrlKey || e.metaKey || e.shiftKey)){ e.preventDefault(); run(); }
+      else if (e.key === "Enter"){ // keep indentation
+        var st = ta.selectionStart, lineStart = ta.value.lastIndexOf("\n", st-1) + 1;
+        var line = ta.value.slice(lineStart, st), ind = (line.match(/^\s*/)||[""])[0];
+        if (/:\s*$/.test(line)) ind += "    ";
+        e.preventDefault(); ta.value = ta.value.slice(0,st) + "\n" + ind + ta.value.slice(ta.selectionEnd);
+        ta.selectionStart = ta.selectionEnd = st + 1 + ind.length; sync(); }
+    });
+    bReset.addEventListener("click", function(){ ta.value = original; out.innerHTML = ""; sync(); });
+    if (bSol) bSol.addEventListener("click", function(){ ta.value = box.dataset.solution; out.innerHTML=""; sync(); });
+    bRun.addEventListener("click", run);
+
+    function run(){
+      if (!pyReady){ out.textContent = "Python todavía se está cargando…"; return; }
+      var res;
+      try { res = JSON.parse(window.pyRun(ta.value, stdinTa ? stdinTa.value : "")); }
+      catch(err){ out.innerHTML = '<span class="err"><b>Error interno</b>' + esc(String(err)) + "</span>"; return; }
+      var html = "";
+      res.forEach(function(p){
+        if (p[0] === "out") html += esc(p[1]);
+        else if (p[0] === "inp") html += '<span class="inp">' + esc(p[1]) + "</span>";
+        else if (p[0] === "echo") html += '<span class="echo">' + esc(p[1]) + "</span>";
+        else if (p[0] === "err"){ var e = JSON.parse(p[1]);
+          if (html && !/\n$/.test(html)) html += "\n";
+          html += '<span class="err"><b>' + esc(e[0]) + "</b>" + esc(e[1]) + (e[2] ? "  (línea " + e[2] + ")" : "") + "</span>"; }
+      });
+      out.innerHTML = html;
+    }
+    runners.push({sync: sync, btn: bRun});
+    sync();
+  }
+  document.querySelectorAll(".runner").forEach(buildRunner);
+
+  window.pyReady = function(){
+    pyReady = true; runners.forEach(function(r){ r.btn.disabled = false; });
+    setStatus("ready", "Python listo");
+  };
+
+  /* ---------- Markdown playground ---------- */
+  var mdSrc = document.getElementById("md-src"), mdOut = document.getElementById("md-out");
+  function renderMd(){
+    if (window.marked){ mdOut.innerHTML = window.marked.parse(mdSrc.value, {gfm:true}); }
+    else { mdOut.textContent = "No se ha podido cargar el renderizador de Markdown."; }
+  }
+  mdSrc.addEventListener("input", renderMd);
+  renderMd();
+  var specTxt = document.getElementById("spec-md").textContent.replace(/^\n/, "").replace(/\s+$/, "");
+  document.getElementById("spec-view").textContent = specTxt;
+
+  /* ---------- Deck navigation ---------- */
+  var slides = Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  var cur = 0;
+  var bar = document.getElementById("bar"), barLogo = document.getElementById("bar-logo");
+  var LOGO_DARK = barLogo.getAttribute("src"), LOGO_LIGHT = "data:image/png;base64,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";
+  function go(n, fromHash){
+    n = Math.max(0, Math.min(slides.length - 1, n));
+    slides[cur].classList.remove("active");
+    cur = n;
+    var s = slides[cur];
+    s.classList.add("active");
+    s.scrollTop = 0;
+    document.getElementById("count").textContent = (cur+1) + " / " + slides.length;
+    document.getElementById("bar-sec").textContent = s.dataset.section + " · " + s.dataset.title;
+    document.getElementById("progress").style.width = ((cur+1) / slides.length * 100) + "%";
+    var dark = s.classList.contains("cover"), red = s.classList.contains("divider");
+    bar.className = "bar" + (dark ? " dark" : red ? " onred" : "");
+    barLogo.src = (dark || red) ? LOGO_LIGHT : LOGO_DARK;
+    s.querySelectorAll(".runner").forEach(function(){});
+    if (!fromHash){ try { history.replaceState(null, "", "#s" + (cur+1)); } catch(e){} }
+    // re-measure editors on the visible slide
+    runners.forEach(function(r){ r.sync(); });
+  }
+  function typing(t){ return t && (t.tagName === "TEXTAREA" || t.tagName === "INPUT"); }
+  document.addEventListener("keydown", function(e){
+    var idx = document.getElementById("index");
+    if (e.key === "Escape"){ if (!idx.hidden){ idx.hidden = true; } else if (typing(e.target)) e.target.blur(); return; }
+    if (typing(e.target) || e.ctrlKey || e.metaKey || e.altKey) return;
+    if (e.key === "ArrowRight" || e.key === "PageDown" || e.key === " "){ e.preventDefault(); go(cur+1); }
+    else if (e.key === "ArrowLeft" || e.key === "PageUp"){ e.preventDefault(); go(cur-1); }
+    else if (e.key === "Home"){ go(0); } else if (e.key === "End"){ go(slides.length-1); }
+    else if (e.key === "i" || e.key === "I"){ toggleIndex(); }
+    else if (e.key === "f" || e.key === "F"){ fullscreen(); }
+  });
+  document.getElementById("btn-prev").addEventListener("click", function(){ go(cur-1); });
+  document.getElementById("btn-next").addEventListener("click", function(){ go(cur+1); });
+  document.getElementById("btn-fs").addEventListener("click", fullscreen);
+  function fullscreen(){
+    try {
+      if (document.fullscreenElement) document.exitFullscreen();
+      else document.documentElement.requestFullscreen().catch(function(){});
+    } catch(e){}
+  }
+  // Index
+  var idxInner = document.getElementById("index-inner"), groups = {}, order = [];
+  slides.forEach(function(s, i){
+    var g = s.dataset.section; if (!groups[g]){ groups[g] = []; order.push(g); }
+    groups[g].push([i, s.dataset.title]);
+  });
+  order.forEach(function(g){
+    var col = document.createElement("div"); var h = document.createElement("h3"); h.textContent = g; col.appendChild(h);
+    var ol = document.createElement("ol");
+    groups[g].forEach(function(it){ var li = document.createElement("li"); var b = document.createElement("button");
+      b.innerHTML = "<span>" + (it[0]+1) + "</span>" + esc(it[1]);
+      b.addEventListener("click", function(){ document.getElementById("index").hidden = true; go(it[0]); });
+      li.appendChild(b); ol.appendChild(li); });
+    col.appendChild(ol); idxInner.appendChild(col);
+  });
+  function toggleIndex(){ var idx = document.getElementById("index"); idx.hidden = !idx.hidden; }
+  document.getElementById("btn-index").addEventListener("click", toggleIndex);
+  document.getElementById("btn-index-close").addEventListener("click", toggleIndex);
+  // Swipe on touch
+  var sx = null;
+  document.addEventListener("touchstart", function(e){ if (!typing(e.target)) sx = e.touches[0].clientX; }, {passive:true});
+  document.addEventListener("touchend", function(e){ if (sx === null) return; var dx = e.changedTouches[0].clientX - sx; sx = null;
+    if (Math.abs(dx) > 70){ go(cur + (dx < 0 ? 1 : -1)); } }, {passive:true});
+
+  document.getElementById("btn-load-spec").addEventListener("click", function(){
+    mdSrc.value = specTxt; renderMd();
+    var target = slides.indexOf(mdSrc.closest(".slide")); if (target >= 0) go(target);
+  });
+
+  var start = 0, m = /^#s(\d+)$/.exec(location.hash || "");
+  if (m) start = parseInt(m[1], 10) - 1;
+  slides[0].classList.add("active");
+  go(start, true);
+
+  /* ---------- Load Python (Brython) ---------- */
+  window.addEventListener("load", function(){
+    function fail(){ setStatus("fail", "Python no disponible"); }
+    if (typeof window.brython !== "function"){ fail(); return; }
+    try { window.brython({debug: 0, ids: ["pyrunner"]}); } catch(e){ fail(); }
+    setTimeout(function(){ if (!pyReady) fail(); }, 20000);
+  });
+})();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/brython@3.13.2/brython.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/brython@3.13.2/brython_stdlib.js"></script>
+
+</body></html>
