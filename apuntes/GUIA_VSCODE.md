@@ -1,6 +1,7 @@
 # VS Code: mapa de la pantalla
 
 *Elaborada con ayuda de Claude IA.*
+
 Lo que aparece en VS Code y qué significa, por zonas de la pantalla.
 
 ---
