@@ -78,3 +78,29 @@ Lo que aparece en VS Code y qué significa, por zonas de la pantalla.
 | ⊗ y ⚠ con números | Errores y avisos detectados en el código |
 | `Cell 5 of 188` | La celda en la que estás dentro del cuaderno |
 | `Spaces: 4` | La sangría que se aplica al pulsar el tabulador |
+
+---
+
+## 7. Ayudas al escribir código
+
+| Ayuda | Qué hace | Recomendación mientras se aprende |
+|---|---|---|
+| Lista desplegable de sugerencias (IntelliSense) | Al escribir, por ejemplo, `colores.`, muestra los nombres disponibles: `append`, `insert`… | Dejarla activada: recuerda nombres, pero el razonamiento es propio |
+| Texto gris que completa líneas enteras (sugerencias en línea de GitHub Copilot) | Propone el código antes de pensarlo | Desactivada: quita el esfuerzo que fija lo aprendido |
+
+**Dónde se cambia:** `File` > `Preferences` > `Settings`, buscar `inline suggest` y marcar o desmarcar `Editor › Inline Suggest: Enabled`. El cambio se guarda solo.
+
+---
+
+## 8. Acciones frecuentes, por menú
+
+| Acción | Cómo |
+|---|---|
+| Guardar | `File` > `Save` |
+| Guardar con otro nombre (para no escribir nunca en el original) | `File` > `Save As...` |
+| Buscar dentro de un archivo | `Edit` > `Find` |
+| Renombrar un archivo | Botón derecho sobre él en el explorador > `Rename` |
+| Ver un Markdown formateado | Icono de la lupa sobre un cuadrado, arriba a la derecha del editor |
+| Mostrar un archivo añadido desde fuera que no aparece | Flecha circular junto al nombre de la carpeta, en el explorador |
+| Recuperar el panel de la terminal | `View` > `Terminal` |
+| Abrir una carpeta de trabajo | `File` > `Open Folder...` |
