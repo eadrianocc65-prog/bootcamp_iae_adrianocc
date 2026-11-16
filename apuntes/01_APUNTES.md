@@ -14,9 +14,12 @@
   - [7. Ayudas al escribir código](#7-ayudas-al-escribir-código)
   - [8. Acciones frecuentes, por menú](#8-acciones-frecuentes-por-menú)
   - [9. Ejecutar celdas sin sorpresas](#9-ejecutar-celdas-sin-sorpresas)
+  - [10. Teclado de repuesto (distribución de EE. UU.)](#10-teclado-de-repuesto-distribución-de-ee-uu)
 - [Parte 2. Python](#parte-2-python)
   - [1. Lo que los cuadernos piden sin explicarlo](#1-lo-que-los-cuadernos-piden-sin-explicarlo)
   - [2. Hallazgos propios](#2-hallazgos-propios)
+  - [3. Variables, comillas y comentarios](#3-variables-comillas-y-comentarios)
+  - [4. Mensajes de error y qué significan](#4-mensajes-de-error-y-qué-significan)
 
 ---
 
@@ -30,7 +33,7 @@ Lo que aparece en VS Code y qué significa, por zonas de la pantalla.
 |---|---|
 | Dos hojas | **Explorer:** el árbol de carpetas y archivos |
 | Lupa | **Search:** buscar texto en todos los archivos |
-| Ramas con círculos | **Source Control:** los cambios para Git; el número indica cuántos archivos han cambiado |
+| Ramas con círculos | **Source Control:** los cambios para Git; el número indica cuántos archivos han cambiado. Muestra cada repositorio por separado: sirve para comprobar en cuál ha quedado un archivo nuevo |
 | Triángulo con insecto | **Run and Debug:** ejecutar y depurar programas |
 | Cuatro cuadrados | **Extensions:** las extensiones; un número indica actualizaciones pendientes |
 | Matraz | **Testing:** pruebas automáticas |
@@ -49,6 +52,8 @@ Lo que aparece en VS Code y qué significa, por zonas de la pantalla.
 | Punto en una carpeta | Hay cambios en algún archivo de dentro |
 | Nombre en gris | Archivo ignorado por el `.gitignore`, como la carpeta `privado` |
 
+**Cuidado:** arrastrar un archivo con el ratón a otra carpeta lo **mueve**. Como los repositorios tienen la misma estructura de carpetas, es fácil soltarlo en el que no es.
+
 ---
 
 ### 3. Las pestañas de los archivos abiertos
@@ -64,7 +69,7 @@ Lo que aparece en VS Code y qué significa, por zonas de la pantalla.
 
 - **Línea de ruta:** dónde está el archivo abierto. Para trabajar, debe empezar por `bootcamp_iae_adrianocc`.
 - **Barra del cuaderno:**
-  - `+ Code` y `+ Markdown`: añaden celdas.
+  - `+ Code` y `+ Markdown`: añaden una celda **debajo de la celda seleccionada**.
   - `Run All`: ejecuta todas las celdas.
   - `Clear All Outputs`: borra los resultados.
   - `Outline`: muestra el índice de títulos.
@@ -122,6 +127,9 @@ Lo que aparece en VS Code y qué significa, por zonas de la pantalla.
 | Mostrar un archivo añadido desde fuera que no aparece | Flecha circular junto al nombre de la carpeta, en el explorador |
 | Recuperar el panel de la terminal | `View` > `Terminal` |
 | Abrir una carpeta de trabajo | `File` > `Open Folder...` |
+| Copiar la ruta de un archivo o carpeta (para construir un comando) | Botón derecho sobre él en el explorador > `Copy Path`. En la terminal, se pega entre comillas detrás del comando |
+| Ir desde `Source Control` al archivo en el explorador | Botón derecho sobre el archivo > `Reveal in Explorer View` |
+| Copiar el código de una celda a otra | Seleccionarlo con el ratón, botón derecho > `Copy`; en la otra celda, botón derecho > `Paste` |
 
 ---
 
@@ -138,6 +146,33 @@ Lo que aparece en VS Code y qué significa, por zonas de la pantalla.
 | `Interrupt`, en la barra del cuaderno | Detiene la ejecución. Solo aparece mientras algo se está ejecutando |
 | Mensaje «Session has been disposed» | La sesión del *kernel* se cerró: pulsar `Restart` |
 | Después de `Restart` | El *kernel* olvida las variables: hay que volver a ejecutar las celdas que las crean |
+| Un `SyntaxError` en cualquier línea | Python lee la celda entera antes de ejecutarla: si hay un error de escritura, **no ejecuta ninguna línea**, ni las correctas. Para probar varias líneas dudosas, cada una en su propia celda |
+
+---
+
+### 10. Teclado de repuesto (distribución de EE. UU.)
+
+Con Windows configurado en español, cada tecla escribe el carácter de su **posición** en un teclado español, no el que tiene impreso. Equivalencias de los caracteres más usados:
+
+| Carácter | Tecla que hay que pulsar |
+|---|---|
+| `ñ` | `;` (a la derecha de la `L`) |
+| Tilde (´) | `'` (a la derecha de la `;`), y después la vocal |
+| `\` | `Alt` derecho + `` ` `` (a la izquierda del `1`) |
+| `"` | `Mayús` + `2` |
+| `'` | `-` (a la derecha del `0`) |
+| `(` `)` | `Mayús` + `8` y `Mayús` + `9` |
+| `=` | `Mayús` + `0` |
+| `+` | `]` (a la derecha de la `[`) |
+| `[` `]` | `Alt` derecho + `[` y `Alt` derecho + `]` |
+| `:` | `Mayús` + `.` |
+| `-` | `/` (a la derecha del `.`) |
+| `_` | `Mayús` + `/` |
+| `#` | `Alt` derecho + `3` |
+| `?` | `Mayús` + `-` (a la derecha del `0`) |
+| `¿` | `Mayús` + `=` (a la izquierda de la tecla de borrar) |
+
+`<` y `>` no tienen tecla: en el teclado español van en una tecla junto a la `Z` que este teclado no tiene. Pendiente de resolver antes del cuaderno 11.
 
 ---
 
@@ -150,6 +185,10 @@ Lo que aparece en VS Code y qué significa, por zonas de la pantalla.
 | `input()` | Detiene el programa, pide un dato al usuario y lo guarda como texto. Lo que va entre paréntesis es solo el mensaje que se muestra; puede ser una pregunta o cualquier frase | `nombre = input("¿Cómo te llamas? ")` |
 | `texto.count("palabra")` | Cuenta cuántas veces aparece la palabra. Distingue letra a letra y mayúsculas de minúsculas | `"Python y Python".count("Python")` → `2` |
 | `:.2f` | Dentro de las llaves de un *f-string*, muestra el número con dos decimales | `f"{20:.2f}"` → `20.00` |
+| Palabras reservadas | Palabras que Python usa con un significado fijo y no pueden ser nombres de variable: `True`, `False`, `import`, `def`, `if`, `for`… El cuaderno 09 (ejercicio 4) las pone a prueba; el prework no las explica, solo `Basics_I` | `import = 40` → `SyntaxError` |
+| `exec` | Función integrada de Python (ejecuta código escrito como texto). El cuaderno 09 la usa como trampa: se puede usar como nombre, pero anula la función. No la explica ningún material del Sprint 1 | `exec = True` funciona, pero no se debe hacer |
+| `del` | Borra una variable. Sirve para recuperar una función cuyo nombre se ha reutilizado. Está en `Basics_I`, no en el prework | `del exec` |
+| `import` | Carga un módulo con funciones extra. Lo pide el cuaderno 10 para usar pi; está en `Basics_II` | `import math` y después `math.pi` |
 
 ### 2. Hallazgos propios
 
@@ -162,3 +201,55 @@ Lo que aparece en VS Code y qué significa, por zonas de la pantalla.
 - Asignar en una posición que no existe da error: en una lista de 3 elementos, `frutas[3] = "uva"` da `IndexError`.
 - `insert` en la posición igual a la longitud de la lista añade al final, como `append`. Para añadir al final, lo habitual es `append`, que no depende de la longitud.
 - `remove` recibe el valor del elemento que se quiere borrar, no su posición, y elimina solo la primera aparición.
+
+### 3. Variables, comillas y comentarios
+
+**Variables y asignación**
+
+- Una variable tiene dos partes: el **nombre** o identificador (a la izquierda del `=`) y el **valor** (a la derecha). Toda variable se crea mediante una asignación.
+- `=` es **asignación**: guarda el valor de la derecha en el nombre de la izquierda. La comparación de igualdad es otro operador, `==`.
+- Una variable guarda un **valor**. «Elementos» es vocabulario de las listas.
+
+**Comillas: solo para los textos**
+
+- Los textos (`str`) van entre comillas: `"Economía"`, `'5'`.
+- Los números (`40`, `6`) y los booleanos (`True`, `False`) van **sin comillas**. Con comillas dejan de serlo y pasan a ser texto: `"True"` es un texto de cuatro letras.
+- Si el texto contiene comillas dobles, se encierra entre comillas simples (`'… "Albert Einstein"'`) o se escribe `\"` delante de cada comilla interior.
+- Dentro de un texto, `\n` salta de línea y `\t` añade una sangría. Se pueden encadenar: `\n\t\t` salta de línea y añade dos sangrías.
+- Los corchetes crean listas: `['Calle de Python']` es una lista con un texto dentro, no un texto. Sumar listas con `+` da una lista más larga.
+
+**Concatenar textos con `+`**
+
+- `+` une los textos tal cual, sin añadir nada entre ellos. Los espacios y las comas se escriben como textos sueltos: `calle + " " + numero + ", " + cp`.
+- Cada variable guarda solo su dato; los separadores van en la concatenación, no dentro de las variables.
+- Dos textos escritos seguidos se unen solos: `'5,' " "` equivale a `'5, '`.
+
+**Nombres de variable**
+
+- Sin espacios: `mi variable` da error. Se separan con guion bajo: `mi_variable`.
+- No pueden empezar por un número: `81mi_variable` da error; `mi_variable10` es correcto.
+- No pueden ser palabras reservadas, como `True` o `import`.
+- No deben ser nombres de funciones de Python, como `print` o `exec`. Python lo permite, pero anula la función. Se recupera con `del`: `del exec`.
+- Sin tildes ni ñ en los nombres, aunque Python 3 las admita. Dentro de los textos sí pueden ir.
+- Cuidado con `l` y `1`, y con `O` y `0`: `variab1e` lleva un uno.
+
+**Comentarios**
+
+- `#` comenta desde ese punto hasta el final de la línea. Puede ir solo en su línea o a la derecha del código.
+- Python ignora el comentario entero: `\t` o `\n` dentro de un comentario se ven tal cual y no hacen nada.
+- Para continuar un comentario en la línea siguiente, se empieza con `#` y unos espacios.
+- Comentario de varias líneas: varias líneas con `#`, o un texto entre comillas triples (`'''` … `'''`) que no se guarda en ninguna variable.
+
+### 4. Mensajes de error y qué significan
+
+La información útil está en la última línea del mensaje. La flecha `^` señala dónde detectó Python el problema.
+
+| Mensaje | Qué significa | Ejemplo |
+|---|---|---|
+| `SyntaxError: unterminated string literal` | Texto sin terminar: falta la comilla de cierre | `otra_var = "Ejercicio` |
+| `SyntaxError: cannot assign to True` | Se intenta usar un valor reservado como nombre de variable | `True = "Ejercicio"` |
+| `SyntaxError: invalid syntax` | Algo que no se puede escribir así: un espacio en el nombre, una palabra reservada… | `mi variable = "Alpha"`, `import = 40` |
+| `SyntaxError: invalid decimal literal` | Un número mal escrito: el nombre empieza por un número | `81mi_variable = "Agua"` |
+| `NameError: name '…' is not defined` | El nombre no existe: variable sin crear, mal escrita o texto sin comillas | `frutas = uva` |
+| `TypeError: 'str' object is not callable` | Se usa como función algo que ya no lo es, por haber reutilizado su nombre | `print = "texto"` y después `print(...)` |
+| `IndexError` | Posición que no existe en una lista | `frutas[3]` en una lista de 3 elementos |
