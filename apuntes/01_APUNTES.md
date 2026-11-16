@@ -201,6 +201,15 @@ Con Windows configurado en español, cada tecla escribe el carácter de su **pos
 - Asignar en una posición que no existe da error: en una lista de 3 elementos, `frutas[3] = "uva"` da `IndexError`.
 - `insert` en la posición igual a la longitud de la lista añade al final, como `append`. Para añadir al final, lo habitual es `append`, que no depende de la longitud.
 - `remove` recibe el valor del elemento que se quiere borrar, no su posición, y elimina solo la primera aparición.
+- **En Python importa el tipo del dato, no su aspecto.** `85.71` (número) y `'85.71'` (texto) se ven casi igual y se comportan de forma distinta. Tres casos del mismo problema: `'5'` entre comillas es texto; `input()` devuelve siempre texto; y `:.2f` convierte un número en texto.
+- El resultado de `f"{x:.2f}"` es un texto, aunque parezca un número: con él no se puede calcular. Sumarle `1` da `TypeError`, y multiplicarlo por 2 repite el texto (`'85.7185.71'`). Además, `:.2f` solo funciona dentro de las llaves de un *f-string*: `print(x:.2f)` da `SyntaxError`.
+
+| Para qué | Qué usar | Resultado |
+|---|---|---|
+| Mostrar un número con dos decimales | `f"{x:.2f}"` | Texto (`str`) |
+| Seguir calculando con el número redondeado | `round(x, 2)` | Número (`float`) |
+
+El formato se aplica al final, al mostrar; los cálculos se hacen siempre con la variable numérica.
 
 ### 3. Variables, comillas y comentarios
 
