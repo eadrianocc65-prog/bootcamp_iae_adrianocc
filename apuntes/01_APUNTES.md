@@ -20,6 +20,11 @@
   - [2. Hallazgos propios](#2-hallazgos-propios)
   - [3. Variables, comillas y comentarios](#3-variables-comillas-y-comentarios)
   - [4. Mensajes de error y qué significan](#4-mensajes-de-error-y-qué-significan)
+  - [5. Funciones que devuelven un valor](#5-funciones-que-devuelven-un-valor)
+  - [6. Números: int y float](#6-números-int-y-float)
+- [Parte 3. Terminal: PowerShell y Git](#parte-3-terminal-powershell-y-git)
+  - [1. Moverse y manejar archivos](#1-moverse-y-manejar-archivos)
+  - [2. Git](#2-git)
 
 ---
 
@@ -201,6 +206,8 @@ Con Windows configurado en español, cada tecla escribe el carácter de su **pos
 - Asignar en una posición que no existe da error: en una lista de 3 elementos, `frutas[3] = "uva"` da `IndexError`.
 - `insert` en la posición igual a la longitud de la lista añade al final, como `append`. Para añadir al final, lo habitual es `append`, que no depende de la longitud.
 - `remove` recibe el valor del elemento que se quiere borrar, no su posición, y elimina solo la primera aparición.
+- **Reasignar usando la propia variable:** para sumar dos años a `edad`, se escribe `edad = edad + 2`, no `edad = 30 + 2`. Python calcula primero la parte derecha con el valor actual y guarda el resultado en la misma variable. Si se repite el número a mano, el programa deja de funcionar cuando el valor cambia.
+- **Concatenar con `+` frente a usar comas en `print`:** con comas, `print` pone un espacio entre cada elemento; con `+`, los textos se pegan tal cual y los espacios hay que escribirlos dentro de las comillas: `"Los beneficios de " + mes + " han sido de "`. Los espacios que hay fuera de las comillas, alrededor del `+`, no cuentan: solo sirven para leer mejor el código.
 - **En Python importa el tipo del dato, no su aspecto.** `85.71` (número) y `'85.71'` (texto) se ven casi igual y se comportan de forma distinta. Tres casos del mismo problema: `'5'` entre comillas es texto; `input()` devuelve siempre texto; y `:.2f` convierte un número en texto.
 - El resultado de `f"{x:.2f}"` es un texto, aunque parezca un número: con él no se puede calcular. Sumarle `1` da `TypeError`, y multiplicarlo por 2 repite el texto (`'85.7185.71'`). Además, `:.2f` solo funciona dentro de las llaves de un *f-string*: `print(x:.2f)` da `SyntaxError`.
 
@@ -262,3 +269,91 @@ La información útil está en la última línea del mensaje. La flecha `^` señ
 | `NameError: name '…' is not defined` | El nombre no existe: variable sin crear, mal escrita o texto sin comillas | `frutas = uva` |
 | `TypeError: 'str' object is not callable` | Se usa como función algo que ya no lo es, por haber reutilizado su nombre | `print = "texto"` y después `print(...)` |
 | `IndexError` | Posición que no existe en una lista | `frutas[3]` en una lista de 3 elementos |
+
+### 5. Funciones que devuelven un valor
+
+`int()`, `float()`, `str()`, `len()`, `round()`, `input()` o `math.sqrt()` **devuelven un valor nuevo**. No cambian la variable que reciben: `int(texto)` no convierte `texto`, sino que calcula un número aparte. Si ese valor no se guarda ni se usa en el momento, se pierde.
+
+Hay tres formas de usarlo:
+
+```python
+numero = int("22")       # 1. guardarlo en una variable
+print(int("22"))         # 2. pasárselo a otra función (anidada)
+total = int("22") + 5    # 3. usarlo dentro de una operación
+```
+
+En la forma anidada, Python resuelve primero lo de dentro: `int("22")` da `22`, y ese `22` es lo que recibe `print`.
+
+Las lecciones 8 y 9 de Deck presentan casi todas estas funciones dentro de `print` (`print(int("98"))`, `print(math.sqrt(25))`) y no muestran que el resultado se pueda guardar. Por eso la forma 1 es la que falta practicar.
+
+| Error típico | Por qué falla | Forma correcta |
+|---|---|---|
+| `int(texto)` en una línea suelta | El resultado no se guarda | `texto_num = int(texto)` |
+| `texto_num = 22` | Escribe el valor a mano; no convierte nada | `texto_num = int(texto)` |
+
+**`f` frente a `len`:**
+
+| | `f` | `len` |
+|---|---|---|
+| Qué es | Un prefijo pegado a las comillas de un texto. No es una función | Una función integrada de Python |
+| Para qué sirve | Construir un texto insertando valores dentro de las llaves `{ }` | Contar los elementos de algo: los caracteres de un texto o los elementos de una lista |
+| Sintaxis | `f"Tengo {edad} años"` | `len("Hola")` |
+| Qué devuelve | Siempre un texto (`str`) | Siempre un número entero (`int`) |
+
+Se pueden combinar, porque dentro de las llaves cabe cualquier expresión: `f"Tu nombre tiene {len(nombre)} letras"`.
+
+### 6. Números: int y float
+
+| Tipo | Qué es | Ejemplos |
+|---|---|---|
+| `int` | Números enteros, sin punto decimal | `22`, `-3`, `0` |
+| `float` | Números con punto decimal. La lección 8 de Deck los llama «reales» | `22.45`, `-0.5`, `3.14159` |
+
+- **El punto decide el tipo:** `22` es `int` y `22.0` es `float`, aunque valgan lo mismo.
+- **Toda división con `/` da `float`:** `4 / 1` da `4.0`.
+- **`math.sqrt()` también devuelve siempre `float`:** `math.sqrt(25)` da `5.0`.
+- **Un `float` es una aproximación:** el ordenador guarda unos 15 o 16 dígitos, así que no puede representar 1/3 ni π enteros. De ahí salen decimales residuales como `…00006`.
+- **`int()` trunca, no redondea:** `int(24.69)` da `24`. Para redondear se usa `round()`: `round(24.69)` da `25`, y `round(24.686, 2)` da `24.69`.
+- **Solo hay que convertir lo que no es número:** en `anio_actual - int(edad)`, `edad` viene de `input()` y es texto; `anio_actual = 2026` ya es entero y no necesita `int()`.
+
+En matemáticas, los números reales incluyen los enteros, las fracciones (decimales exactos o periódicos) y los irracionales, como π o √2. Python solo distingue entre `int` y `float`.
+
+---
+
+## Parte 3. Terminal: PowerShell y Git
+
+La terminal que se abre en VS Code con `Terminal` > `New Terminal` es **PowerShell**. Los comandos de Git funcionan dentro de ella.
+
+**Rutas con espacios:** van siempre entre comillas, como `"C:\Users\ADRIANO CONTRERAS\..."`. Sin comillas, PowerShell corta la ruta en el espacio y da error («No se encuentra ningún parámetro de posición…»). Forma fácil de construir un comando: clic derecho sobre la carpeta o el archivo en el `Explorer` de VS Code > `Copy Path`, y pegar la ruta entre comillas detrás del comando.
+
+### 1. Moverse y manejar archivos
+
+| Comando | Qué hace | Ejemplo |
+|---|---|---|
+| `cd carpeta` | Entra en una carpeta | `cd bootcamp_iae_adrianocc` |
+| `cd ..` | Sube a la carpeta superior | |
+| `ls` | Lista el contenido de la carpeta | |
+| `ls -Recurse carpeta` | Lista la carpeta y el contenido de todas sus subcarpetas | `ls -Recurse mis_soluciones` |
+| `mkdir ruta\nueva` | Crea la carpeta y, si no existen, todas las intermedias | `mkdir mis_soluciones\Sprint_01\02_Python_I` |
+| `cp archivo destino` | Copia un archivo; el original se queda | `cp logo_tb_b.png mis_soluciones\Sprint_01\01_Herramientas\` |
+| `cp -r carpeta destino` | Copia una carpeta con todo su contenido. Sin `-r`, no copia carpetas | `cp -r img mis_soluciones\Sprint_01\01_Herramientas\` |
+| `mv origen destino` | Mueve o cambia el nombre de un archivo | `mv nombre.ipynb.ipynb nombre.ipynb` |
+| `rm archivo` | Borra un archivo **sin pasar por la papelera** | |
+
+### 2. Git
+
+| Comando | Qué hace |
+|---|---|
+| `git status` | Muestra qué ha cambiado desde el último *commit* y qué está preparado para el siguiente |
+| `git add archivo` | Prepara un archivo para el *commit* |
+| `git add carpeta` | Prepara todo lo nuevo o cambiado dentro de esa carpeta |
+| `git commit -m "descripción"` | Guarda los cambios preparados, con una descripción |
+| `git push` | Sube a GitHub los *commits* guardados |
+| `git pull` | Trae de GitHub las novedades. Se usa en los repositorios de consulta |
+| `git mv origen destino` | Mueve un archivo que Git ya controla, conservando su historial |
+| `git restore archivo` | Devuelve un archivo a su última versión guardada. Borra los cambios sin guardar |
+
+**`mv` frente a `git mv`:** `mv` mueve el archivo, pero Git cree que se ha borrado uno y ha aparecido otro nuevo. `git mv` le dice a Git que es el mismo archivo en otro sitio, y en `git status` sale como `renamed:`. `git mv` solo sirve para archivos que Git ya controla; para uno que nunca se ha subido, se usa `mv`.
+
+**Doble extensión:** el Explorador de Windows oculta las extensiones. Al cambiar el nombre de un archivo, no se escribe `.ipynb` si ya estaba: se duplicaría (`archivo.ipynb.ipynb`).
+
